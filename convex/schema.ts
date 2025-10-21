@@ -19,11 +19,16 @@ const schema = defineSchema({
       v.literal("O+"),
       v.literal("O-")
     ),
-    location: v.optional(v.string()),
+    age: v.number(),
+    gender: v.union(v.literal("male"), v.literal("female"), v.literal("other")),
+    location: v.string(),
+    locationPermissionGranted: v.boolean(),
+    profileCompleted: v.boolean(),
     createdAt: v.optional(v.number()),
   })
     .index("by_user_role", ["role"])
-    .index("by_user_id", ["userId"]),
+    .index("by_user_id", ["userId"])
+    .index("by_profile_completed", ["profileCompleted"]),
 });
 
 export default schema;

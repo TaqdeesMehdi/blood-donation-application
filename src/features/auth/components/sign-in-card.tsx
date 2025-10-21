@@ -34,12 +34,10 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
       });
   };
   return (
-    <Card className="h-full w-full p-8">
-      <CardHeader className="px-0 pt-0">
-        <CardTitle>Login to continue</CardTitle>
-        <CardDescription>
-          Use Your Email or any other service to continue
-        </CardDescription>
+    <Card className="w-full border-none shadow-lg p-6">
+      <CardHeader className="px-0 pt-0 space-y-2">
+        <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
+        <CardDescription>Sign in to your account to continue</CardDescription>
       </CardHeader>
       {!!error && (
         <div className="bg-destructive/15 text-destructive p-3 flex items-center gap-x-2 rounded-md text-sm mb-6">
@@ -48,7 +46,7 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
         </div>
       )}
       <CardContent className="space-y-5 px-0 pb-0">
-        <form onSubmit={onCredentialsSignIn} className="space-y-2.5">
+        <form onSubmit={onCredentialsSignIn} className="space-y-4">
           <Input
             disabled={isPending}
             value={email}
@@ -56,6 +54,7 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
             type="email"
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
+            className="h-11"
           />
           <Input
             disabled={isPending}
@@ -64,10 +63,11 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
             type="password"
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
+            className="h-11"
           />
           <Button
             type="submit"
-            className="w-full"
+            className="w-full bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700"
             size="lg"
             disabled={isPending}
           >
@@ -75,11 +75,11 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
           </Button>
         </form>
 
-        <p className="text-xs text-muted-foreground">
+        <p className="text-xs text-muted-foreground text-center">
           Don&apos;t have an account?{" "}
           <span
             onClick={() => setState("signUp")}
-            className="text-sky-700 hover:underline cursor-pointer"
+            className="text-red-600 hover:underline cursor-pointer font-medium"
           >
             Sign Up
           </span>
