@@ -4,12 +4,10 @@ import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useAuthActions } from "@convex-dev/auth/react";
-import { Button } from "@/components/ui/button";
+import { DonorView } from "@/features/donor/views/donor-view";
 
 export default function DonorPage() {
   const router = useRouter();
-  const { signOut } = useAuthActions();
 
   const currentProfile = useQuery(api.members.getCurrentMemberProfile);
 
@@ -42,13 +40,7 @@ export default function DonorPage() {
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-4">Donor Dashboard</h1>
-      <p className="text-muted-foreground">
-        Welcome to your donor dashboard! This is where you&apos;ll manage your
-        blood donation activities.
-      </p>
-      {/* More donor-specific features will be added later */}
-      <Button onClick={() => signOut()}>Signout</Button>
+      <DonorView />
     </div>
   );
 }

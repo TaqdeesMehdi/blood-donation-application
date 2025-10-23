@@ -4,12 +4,9 @@ import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { useAuthActions } from "@convex-dev/auth/react";
+import { RecipientView } from "@/features/recipient/views/recipient-view";
 
 export default function RecipientPage() {
-  const { signOut } = useAuthActions();
-
   const router = useRouter();
   const currentProfile = useQuery(api.members.getCurrentMemberProfile);
 
@@ -42,13 +39,7 @@ export default function RecipientPage() {
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-4">Recipient Dashboard</h1>
-      <p className="text-muted-foreground">
-        Welcome to your recipient dashboard! This is where you&apos;ll find
-        blood donors and manage your requests.
-      </p>
-      {/* More recipient-specific features will be added later */}
-      <Button onClick={() => signOut()}>Signout</Button>
+      <RecipientView />
     </div>
   );
 }

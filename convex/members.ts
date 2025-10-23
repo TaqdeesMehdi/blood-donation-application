@@ -109,3 +109,33 @@ export const checkProfileCompletion = query({
     return member?.profileCompleted ?? false;
   },
 });
+
+/**
+ * Get all members with recipient role
+ * Returns all recipients with their user information
+ */
+export const getAllRecipients = query({
+  args: {},
+  handler: async (ctx) => {
+    // Query all members with recipient role
+    const recipients = await ctx.db
+      .query("members")
+      .withIndex("by_user_role", (q) => q.eq("role", "recipient"))
+      .collect();
+
+    // Get user information for each recipient
+    const recipientsWithUserInfo = await Promise.all(
+      recipients.map(async (recipient) => {
+        const user = await ctx.db.get(recipient.userId);
+        return {
+          ...recipient,
+          userName: user?.name || user?.email || "Unknown",
+          userEmail: user?.email,
+          userImage: user?.image,
+        };
+      })
+    );
+
+    return recipientsWithUserInfo;
+  },
+});

@@ -1,17 +1,7 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { ConvexClientProvider } from "@/components/convex-client-provider";
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "Blood donation Application",
@@ -26,8 +16,15 @@ export default function RootLayout({
   return (
     <ConvexAuthNextjsServerProvider>
       <html lang="en">
+        <head>
+          <link
+            href="https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code@5.1.0/index.css"
+            rel="stylesheet"
+          />
+        </head>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className="antialiased"
+          style={{ fontFamily: "'Cascadia Code', monospace" }}
         >
           <ConvexClientProvider>{children}</ConvexClientProvider>
         </body>
