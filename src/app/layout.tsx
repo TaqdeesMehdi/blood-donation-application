@@ -1,10 +1,17 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { ConvexClientProvider } from "@/components/convex-client-provider";
 
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
+
 export const metadata: Metadata = {
-  title: "Blood donation Application",
+  title: "Blood Donation Application",
   description: "A blood donation application made in nextjs and convex",
 };
 
@@ -16,15 +23,9 @@ export default function RootLayout({
   return (
     <ConvexAuthNextjsServerProvider>
       <html lang="en">
-        <head>
-          <link
-            href="https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code@5.1.0/index.css"
-            rel="stylesheet"
-          />
-        </head>
         <body
-          className="antialiased"
-          style={{ fontFamily: "'Cascadia Code', monospace" }}
+          className={`${inter.variable} antialiased`}
+          style={{ fontFamily: "var(--font-inter), sans-serif" }}
         >
           <ConvexClientProvider>{children}</ConvexClientProvider>
         </body>
