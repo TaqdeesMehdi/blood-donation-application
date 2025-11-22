@@ -1,0 +1,468 @@
+{
+  "version": "6.0",
+  "nxVersion": "22.0.3",
+  "pathMappings": {
+    "@/*": [
+      "./src/*"
+    ]
+  },
+  "nxJsonPlugins": [],
+  "fileMap": {
+    "projectFileMap": {},
+    "nonProjectFiles": [
+      {
+        "file": ".gitignore",
+        "hash": "1867017717006394117"
+      },
+      {
+        "file": "README.md",
+        "hash": "10766794746169900117"
+      },
+      {
+        "file": "components.json",
+        "hash": "5059790963801601477"
+      },
+      {
+        "file": "convex/README.md",
+        "hash": "4592915070334894122"
+      },
+      {
+        "file": "convex/_generated/api.d.ts",
+        "hash": "1861111670571447528"
+      },
+      {
+        "file": "convex/_generated/api.js",
+        "hash": "16653134980052035017"
+      },
+      {
+        "file": "convex/_generated/dataModel.d.ts",
+        "hash": "5104628464357660261"
+      },
+      {
+        "file": "convex/_generated/server.d.ts",
+        "hash": "7808651494658882785"
+      },
+      {
+        "file": "convex/_generated/server.js",
+        "hash": "15781637445868247778"
+      },
+      {
+        "file": "convex/auth.config.ts",
+        "hash": "15300947742746441463"
+      },
+      {
+        "file": "convex/auth.ts",
+        "hash": "10613225444460141667"
+      },
+      {
+        "file": "convex/http.ts",
+        "hash": "13295431112907721150"
+      },
+      {
+        "file": "convex/members.ts",
+        "hash": "11711707718575791727"
+      },
+      {
+        "file": "convex/schema.ts",
+        "hash": "15622942831225091219"
+      },
+      {
+        "file": "convex/tsconfig.json",
+        "hash": "16853660354966021404"
+      },
+      {
+        "file": "convex/users.ts",
+        "hash": "6324445109096018367"
+      },
+      {
+        "file": "eslint.config.mjs",
+        "hash": "12899113689863397878"
+      },
+      {
+        "file": "next.config.ts",
+        "hash": "17157214668998829023"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "939796777585065467"
+      },
+      {
+        "file": "package.json",
+        "hash": "2942829614320938772"
+      },
+      {
+        "file": "postcss.config.mjs",
+        "hash": "535692822154927684"
+      },
+      {
+        "file": "public/city-hospital.jpg",
+        "hash": "14814609664035884236"
+      },
+      {
+        "file": "public/file.svg",
+        "hash": "15617830351863523835"
+      },
+      {
+        "file": "public/globe.svg",
+        "hash": "9134466864871335697"
+      },
+      {
+        "file": "public/leaflet/marker-icon-2x.png",
+        "hash": "16225105066935018559"
+      },
+      {
+        "file": "public/leaflet/marker-icon.png",
+        "hash": "12839574698303764257"
+      },
+      {
+        "file": "public/leaflet/marker-shadow.png",
+        "hash": "13400201256143088927"
+      },
+      {
+        "file": "public/mukhtar-a-sheikh-hospital.jpg",
+        "hash": "15359061694692702533"
+      },
+      {
+        "file": "public/next.svg",
+        "hash": "8300767200008744458"
+      },
+      {
+        "file": "public/nishtar-hospital.jpg",
+        "hash": "10763346455815323083"
+      },
+      {
+        "file": "public/shabaz-sharif-hospital.jpg",
+        "hash": "1291645515970327329"
+      },
+      {
+        "file": "public/ui.png",
+        "hash": "13449580379900141143"
+      },
+      {
+        "file": "public/vercel.svg",
+        "hash": "3007623926711696394"
+      },
+      {
+        "file": "public/window.svg",
+        "hash": "16677869292061012332"
+      },
+      {
+        "file": "src/app/auth/page.tsx",
+        "hash": "4972497583941197123"
+      },
+      {
+        "file": "src/app/donor/dashboard/page.tsx",
+        "hash": "8448868464555386041"
+      },
+      {
+        "file": "src/app/donor/layout.tsx",
+        "hash": "13098853567915507514"
+      },
+      {
+        "file": "src/app/donor/page.tsx",
+        "hash": "1519474920943430163"
+      },
+      {
+        "file": "src/app/favicon.ico",
+        "hash": "9157999678830540297"
+      },
+      {
+        "file": "src/app/globals.css",
+        "hash": "6214964428837904477"
+      },
+      {
+        "file": "src/app/layout.tsx",
+        "hash": "16221596288846465783"
+      },
+      {
+        "file": "src/app/page.tsx",
+        "hash": "13911094182384963115"
+      },
+      {
+        "file": "src/app/recipient/layout.tsx",
+        "hash": "18353454422469654831"
+      },
+      {
+        "file": "src/app/recipient/page.tsx",
+        "hash": "263068717210768883"
+      },
+      {
+        "file": "src/components/convex-client-provider.tsx",
+        "hash": "18253674133863177045"
+      },
+      {
+        "file": "src/components/ui/accordion.tsx",
+        "hash": "14845587631308835637"
+      },
+      {
+        "file": "src/components/ui/alert-dialog.tsx",
+        "hash": "8072787343859173829"
+      },
+      {
+        "file": "src/components/ui/alert.tsx",
+        "hash": "7480384198647105618"
+      },
+      {
+        "file": "src/components/ui/aspect-ratio.tsx",
+        "hash": "15701597510096820978"
+      },
+      {
+        "file": "src/components/ui/avatar.tsx",
+        "hash": "14751210977726479928"
+      },
+      {
+        "file": "src/components/ui/badge.tsx",
+        "hash": "10963678808027697072"
+      },
+      {
+        "file": "src/components/ui/breadcrumb.tsx",
+        "hash": "4542918030053654785"
+      },
+      {
+        "file": "src/components/ui/button.tsx",
+        "hash": "8171416810695226665"
+      },
+      {
+        "file": "src/components/ui/calendar.tsx",
+        "hash": "6194910191893103211"
+      },
+      {
+        "file": "src/components/ui/card.tsx",
+        "hash": "12626163197687957168"
+      },
+      {
+        "file": "src/components/ui/carousel.tsx",
+        "hash": "6463183749126440978"
+      },
+      {
+        "file": "src/components/ui/chart.tsx",
+        "hash": "6997994955143046372"
+      },
+      {
+        "file": "src/components/ui/checkbox.tsx",
+        "hash": "17824499335902137134"
+      },
+      {
+        "file": "src/components/ui/collapsible.tsx",
+        "hash": "11042801197673806344"
+      },
+      {
+        "file": "src/components/ui/command.tsx",
+        "hash": "13614135110219176049"
+      },
+      {
+        "file": "src/components/ui/context-menu.tsx",
+        "hash": "16051270640191030489"
+      },
+      {
+        "file": "src/components/ui/dialog.tsx",
+        "hash": "3572114506774297288"
+      },
+      {
+        "file": "src/components/ui/drawer.tsx",
+        "hash": "6340250294204870363"
+      },
+      {
+        "file": "src/components/ui/dropdown-menu.tsx",
+        "hash": "3901082716450401437"
+      },
+      {
+        "file": "src/components/ui/form.tsx",
+        "hash": "3200697611223940984"
+      },
+      {
+        "file": "src/components/ui/hover-card.tsx",
+        "hash": "4222917547134356225"
+      },
+      {
+        "file": "src/components/ui/input-otp.tsx",
+        "hash": "16041620776518406954"
+      },
+      {
+        "file": "src/components/ui/input.tsx",
+        "hash": "2607547172702202989"
+      },
+      {
+        "file": "src/components/ui/label.tsx",
+        "hash": "5904204581463370082"
+      },
+      {
+        "file": "src/components/ui/menubar.tsx",
+        "hash": "11635968809644900115"
+      },
+      {
+        "file": "src/components/ui/navigation-menu.tsx",
+        "hash": "1463801237709690436"
+      },
+      {
+        "file": "src/components/ui/pagination.tsx",
+        "hash": "1221162818688540102"
+      },
+      {
+        "file": "src/components/ui/popover.tsx",
+        "hash": "2123900949476297986"
+      },
+      {
+        "file": "src/components/ui/progress.tsx",
+        "hash": "11845427145659035377"
+      },
+      {
+        "file": "src/components/ui/radio-group.tsx",
+        "hash": "9009039500102138258"
+      },
+      {
+        "file": "src/components/ui/resizable.tsx",
+        "hash": "16715976187353444410"
+      },
+      {
+        "file": "src/components/ui/scroll-area.tsx",
+        "hash": "4331523341645098951"
+      },
+      {
+        "file": "src/components/ui/select.tsx",
+        "hash": "9281864355344609472"
+      },
+      {
+        "file": "src/components/ui/separator.tsx",
+        "hash": "17968105264491771283"
+      },
+      {
+        "file": "src/components/ui/sheet.tsx",
+        "hash": "16878751729248024323"
+      },
+      {
+        "file": "src/components/ui/sidebar.tsx",
+        "hash": "8409537637849470092"
+      },
+      {
+        "file": "src/components/ui/skeleton.tsx",
+        "hash": "16279548040846261523"
+      },
+      {
+        "file": "src/components/ui/slider.tsx",
+        "hash": "14523236345534185617"
+      },
+      {
+        "file": "src/components/ui/sonner.tsx",
+        "hash": "17295952987053759355"
+      },
+      {
+        "file": "src/components/ui/switch.tsx",
+        "hash": "1593497887276823321"
+      },
+      {
+        "file": "src/components/ui/table.tsx",
+        "hash": "9236219364163009886"
+      },
+      {
+        "file": "src/components/ui/tabs.tsx",
+        "hash": "10177421167616315890"
+      },
+      {
+        "file": "src/components/ui/textarea.tsx",
+        "hash": "3895507706129911610"
+      },
+      {
+        "file": "src/components/ui/toggle-group.tsx",
+        "hash": "15943558637507000692"
+      },
+      {
+        "file": "src/components/ui/toggle.tsx",
+        "hash": "8693739005475279689"
+      },
+      {
+        "file": "src/components/ui/tooltip.tsx",
+        "hash": "17994959204874748216"
+      },
+      {
+        "file": "src/features/auth/components/auth-screen.tsx",
+        "hash": "5166143411884618126"
+      },
+      {
+        "file": "src/features/auth/components/sign-in-card.tsx",
+        "hash": "5586472466728837777"
+      },
+      {
+        "file": "src/features/auth/components/sign-up-card.tsx",
+        "hash": "10394168396942899875"
+      },
+      {
+        "file": "src/features/auth/types.ts",
+        "hash": "6109972935011107026"
+      },
+      {
+        "file": "src/features/donor/components/donor-landing-sections.tsx",
+        "hash": "15155536206746441219"
+      },
+      {
+        "file": "src/features/donor/components/donor-navbar.tsx",
+        "hash": "4581040146374791489"
+      },
+      {
+        "file": "src/features/donor/components/recipient-map-location.tsx",
+        "hash": "2746014397453800887"
+      },
+      {
+        "file": "src/features/donor/components/recipient-profile-section.tsx",
+        "hash": "15153426754301267021"
+      },
+      {
+        "file": "src/features/donor/views/donor-dashboard-view.tsx",
+        "hash": "8594206149130569629"
+      },
+      {
+        "file": "src/features/donor/views/donor-view.tsx",
+        "hash": "10847517926121442477"
+      },
+      {
+        "file": "src/features/members/api/use-current-member.ts",
+        "hash": "4513701205724659085"
+      },
+      {
+        "file": "src/features/members/api/use-current-user.ts",
+        "hash": "2656768211699858727"
+      },
+      {
+        "file": "src/features/members/components/member-button.tsx",
+        "hash": "7440247872734086515"
+      },
+      {
+        "file": "src/features/members/components/member-profile-form.tsx",
+        "hash": "12231978584179228071"
+      },
+      {
+        "file": "src/features/members/types.ts",
+        "hash": "1654075538647122920"
+      },
+      {
+        "file": "src/features/recipient/components/recipient-landing-section.tsx",
+        "hash": "15883642331019423339"
+      },
+      {
+        "file": "src/features/recipient/components/recipient-navbar.tsx",
+        "hash": "4209419100980572065"
+      },
+      {
+        "file": "src/features/recipient/views/recipient-view.tsx",
+        "hash": "5583925437255853568"
+      },
+      {
+        "file": "src/hooks/use-mobile.ts",
+        "hash": "14900138732519213047"
+      },
+      {
+        "file": "src/lib/utils.ts",
+        "hash": "6483145186850064023"
+      },
+      {
+        "file": "src/middleware.ts",
+        "hash": "9663011495350398699"
+      },
+      {
+        "file": "tsconfig.json",
+        "hash": "4965826641429490352"
+      }
+    ]
+  },
+  "externalNodesHash": "15694182235761502938"
+}

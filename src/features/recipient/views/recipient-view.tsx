@@ -1,3 +1,9 @@
+import { RecipientLandingSection } from "../components/recipient-landing-section";
+
 export const RecipientView = () => {
-  return <div>Recipient view</div>;
+  return (
+    <div>
+      <RecipientLandingSection />
+    </div>
+  );
 };

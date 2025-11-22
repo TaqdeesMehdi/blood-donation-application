@@ -124,7 +124,7 @@ export const RecipientMapLocation = ({
   }, [selectedRecipient]);
 
   return (
-    <div className="relative w-full h-[600px] lg:h-[70vh] border border-gray-200 rounded-lg bg-gray-50 overflow-hidden">
+    <div className="relative w-full h-[600px] lg:h-[70vh] border border-gray-200 rounded-lg bg-gray-50 overflow-hidden z-10">
       <div ref={mapContainerRef} className="h-full w-full" />
 
       {(!isMapReady || !selectedRecipient) && (
