@@ -17,12 +17,14 @@ const schema = defineSchema({
       v.literal("AB+"),
       v.literal("AB-"),
       v.literal("O+"),
-      v.literal("O-")
+      v.literal("O-"),
     ),
     age: v.number(),
     gender: v.union(v.literal("male"), v.literal("female"), v.literal("other")),
     location: v.string(),
     locationPermissionGranted: v.boolean(),
+    latitude: v.optional(v.number()),
+    longitude: v.optional(v.number()),
     profileCompleted: v.boolean(),
     createdAt: v.optional(v.number()),
   })

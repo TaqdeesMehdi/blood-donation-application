@@ -21,6 +21,7 @@ import {
   Zap,
   Phone,
 } from "lucide-react";
+import { LocationControl } from "./location-control";
 
 export const RecipientLandingSection = () => {
   const features = [
@@ -130,6 +131,13 @@ export const RecipientLandingSection = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-rose-50 via-white to-pink-50">
+      {/* Location Control Section */}
+      <section className="py-8 px-4 md:px-8 lg:px-16">
+        <div className="max-w-2xl mx-auto">
+          <LocationControl />
+        </div>
+      </section>
+
       {/* Hero Section */}
       <section className="py-20 px-4 md:px-8 lg:px-16">
         <div className="max-w-7xl mx-auto">

@@ -15,11 +15,13 @@ type Recipient = {
   gender?: string;
   phone?: string;
   bio?: string;
+  latitude?: number;
+  longitude?: number;
 };
 
 export const DonorDashboardView = () => {
   const [selectedRecipient, setSelectedRecipient] = useState<Recipient | null>(
-    null
+    null,
   );
 
   const handleLocationClick = (recipient: Recipient) => {

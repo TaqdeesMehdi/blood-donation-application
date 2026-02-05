@@ -17,7 +17,7 @@ export const createMemberProfile = mutation({
       v.literal("AB+"),
       v.literal("AB-"),
       v.literal("O+"),
-      v.literal("O-")
+      v.literal("O-"),
     ),
     gender: v.union(v.literal("male"), v.literal("female"), v.literal("other")),
     role: v.union(v.literal("donor"), v.literal("recipient")),
@@ -133,9 +133,42 @@ export const getAllRecipients = query({
           userEmail: user?.email,
           userImage: user?.image,
         };
-      })
+      }),
     );
 
     return recipientsWithUserInfo;
+  },
+});
+
+/**
+ * Update the geolocation coordinates of the current user's member profile
+ */
+export const updateMemberLocation = mutation({
+  args: {
+    latitude: v.number(),
+    longitude: v.number(),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
+      throw new Error("User must be authenticated to update location");
+    }
+
+    const member = await ctx.db
+      .query("members")
+      .withIndex("by_user_id", (q) => q.eq("userId", userId))
+      .first();
+
+    if (!member) {
+      throw new Error("Member profile not found");
+    }
+
+    await ctx.db.patch(member._id, {
+      latitude: args.latitude,
+      longitude: args.longitude,
+      locationPermissionGranted: true,
+    });
+
+    return { success: true };
   },
 });

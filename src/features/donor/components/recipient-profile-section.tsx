@@ -15,6 +15,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { MapPin } from "lucide-react";
 
 interface RecipientProfileSectionProps {
   onLocationClick?: (recipient: Recipient) => void;
@@ -31,6 +32,8 @@ type Recipient = {
   gender?: string;
   phone?: string;
   bio?: string;
+  latitude?: number;
+  longitude?: number;
 };
 
 export const RecipientProfileSection = ({
@@ -39,7 +42,7 @@ export const RecipientProfileSection = ({
   const recipients = useQuery(api.members.getAllRecipients);
   const [open, setOpen] = useState<boolean>(false);
   const [selectedRecipient, setSelectedRecipient] = useState<Recipient | null>(
-    null
+    null,
   );
 
   // Loading state
@@ -96,9 +99,17 @@ export const RecipientProfileSection = ({
 
                 {/* Info */}
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-gray-900 truncate">
-                    {recipient.userName}
-                  </h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-semibold text-gray-900 truncate">
+                      {recipient.userName}
+                    </h3>
+                    {recipient.latitude && recipient.longitude && (
+                      <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-green-100 text-green-700">
+                        <MapPin className="size-3 mr-0.5" />
+                        Live
+                      </span>
+                    )}
+                  </div>
                   <p className="text-sm text-gray-500">{recipient.userEmail}</p>
                   <div className="flex items-center gap-2 mt-1">
                     <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
@@ -131,14 +142,17 @@ export const RecipientProfileSection = ({
                   </Button>
 
                   <Button
-                    variant="ghost"
+                    variant="default"
+                    className="bg-red-500 hover:bg-red-600"
                     onClick={() => {
                       if (onLocationClick) {
                         onLocationClick(recipient);
                       }
                     }}
+                    disabled={!recipient.latitude || !recipient.longitude}
                   >
-                    Location
+                    <MapPin className="size-4 mr-1" />
+                    View Location
                   </Button>
                 </div>
               </div>

@@ -16,6 +16,8 @@ type Recipient = {
   gender?: string;
   phone?: string;
   bio?: string;
+  latitude?: number;
+  longitude?: number;
 };
 
 interface RecipientMapLocationProps {
@@ -97,12 +99,19 @@ export const RecipientMapLocation = ({
       return;
     }
 
+    // Use recipient's actual coordinates if available, otherwise use default
+    const coordinates: [number, number] =
+      selectedRecipient.latitude && selectedRecipient.longitude
+        ? [selectedRecipient.latitude, selectedRecipient.longitude]
+        : MULTAN_CENTER;
+
     const popupContent = `
       <div style="font-size: 14px;">
         <strong style="font-size: 16px;">${selectedRecipient.userName}</strong>
         <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px;">
           ${selectedRecipient.bloodType ? `<span><strong>Blood Type:</strong> ${selectedRecipient.bloodType}</span>` : ""}
           ${selectedRecipient.location ? `<span><strong>Location:</strong> ${selectedRecipient.location}</span>` : ""}
+          ${selectedRecipient.latitude && selectedRecipient.longitude ? `<span><strong>Coordinates:</strong> ${selectedRecipient.latitude.toFixed(6)}, ${selectedRecipient.longitude.toFixed(6)}</span>` : ""}
           ${selectedRecipient.age ? `<span><strong>Age:</strong> ${selectedRecipient.age} years</span>` : ""}
           ${selectedRecipient.gender ? `<span><strong>Gender:</strong> ${selectedRecipient.gender}</span>` : ""}
           ${selectedRecipient.phone ? `<span><strong>Phone:</strong> ${selectedRecipient.phone}</span>` : ""}
@@ -111,14 +120,14 @@ export const RecipientMapLocation = ({
     `;
 
     if (!markerRef.current) {
-      markerRef.current = L.marker(MULTAN_CENTER).addTo(map);
+      markerRef.current = L.marker(coordinates).addTo(map);
     }
 
-    markerRef.current.setLatLng(MULTAN_CENTER);
+    markerRef.current.setLatLng(coordinates);
     markerRef.current.bindPopup(popupContent, { autoClose: true }).openPopup();
 
     // Focus map on the marker
-    map.setView(MULTAN_CENTER, DEFAULT_ZOOM, {
+    map.setView(coordinates, DEFAULT_ZOOM, {
       animate: true,
     });
   }, [selectedRecipient]);
