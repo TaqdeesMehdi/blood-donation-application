@@ -22,6 +22,7 @@ import {
   Phone,
 } from "lucide-react";
 import { LocationControl } from "./location-control";
+import Link from "next/link";
 
 export const RecipientLandingSection = () => {
   const features = [
@@ -156,13 +157,15 @@ export const RecipientLandingSection = () => {
               help save lives.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white px-8 py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all"
-              >
-                <Search className="w-5 h-5 mr-2" />
-                Find Donors Now
-              </Button>
+              <Link href={"/recipient/dashboard"} prefetch={true}>
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white px-8 py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all"
+                >
+                  <Search className="w-5 h-5 mr-2" />
+                  Find Donors Now
+                </Button>
+              </Link>
               <Button
                 size="lg"
                 variant="outline"
@@ -422,14 +425,16 @@ export const RecipientLandingSection = () => {
             blood donors right now and be prepared for any emergency.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
-              variant="secondary"
-              className="bg-white text-red-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold shadow-xl"
-            >
-              <Search className="w-5 h-5 mr-2" />
-              Browse Donors
-            </Button>
+            <Link href={"/recipient/dashboard"} prefetch={true}>
+              <Button
+                size="lg"
+                variant="secondary"
+                className="bg-white text-red-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold shadow-xl"
+              >
+                <Search className="w-5 h-5 mr-2" />
+                Browse Donors
+              </Button>
+            </Link>
             <Button
               size="lg"
               variant="outline"

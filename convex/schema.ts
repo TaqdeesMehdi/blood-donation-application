@@ -26,6 +26,7 @@ const schema = defineSchema({
     latitude: v.optional(v.number()),
     longitude: v.optional(v.number()),
     profileCompleted: v.boolean(),
+    profileImageUrl: v.optional(v.string()),
     createdAt: v.optional(v.number()),
   })
     .index("by_user_role", ["role"])

@@ -131,12 +131,145 @@ export const getAllRecipients = query({
           ...recipient,
           userName: user?.name || user?.email || "Unknown",
           userEmail: user?.email,
-          userImage: user?.image,
+          userImage: recipient.profileImageUrl || user?.image,
         };
       }),
     );
 
     return recipientsWithUserInfo;
+  },
+});
+
+/**
+ * Get all members with donor role
+ * Returns all donors with their user information
+ */
+export const getAllDonors = query({
+  args: {},
+  handler: async (ctx) => {
+    const donors = await ctx.db
+      .query("members")
+      .withIndex("by_user_role", (q) => q.eq("role", "donor"))
+      .collect();
+
+    const donorsWithUserInfo = await Promise.all(
+      donors.map(async (donor) => {
+        const user = await ctx.db.get(donor.userId);
+        return {
+          ...donor,
+          userName: user?.name || user?.email || "Unknown",
+          userEmail: user?.email,
+          userImage: donor.profileImageUrl || user?.image,
+        };
+      }),
+    );
+
+    return donorsWithUserInfo;
+  },
+});
+
+/**
+ * Update editable fields of the current user's member profile
+ */
+export const updateMemberProfile = mutation({
+  args: {
+    phone: v.string(),
+    bloodType: v.union(
+      v.literal("A+"),
+      v.literal("A-"),
+      v.literal("B+"),
+      v.literal("B-"),
+      v.literal("AB+"),
+      v.literal("AB-"),
+      v.literal("O+"),
+      v.literal("O-"),
+    ),
+    age: v.number(),
+    gender: v.union(v.literal("male"), v.literal("female"), v.literal("other")),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
+      throw new Error("User must be authenticated");
+    }
+
+    const member = await ctx.db
+      .query("members")
+      .withIndex("by_user_id", (q) => q.eq("userId", userId))
+      .first();
+
+    if (!member) {
+      throw new Error("Member profile not found");
+    }
+
+    await ctx.db.patch(member._id, {
+      phone: args.phone,
+      bloodType: args.bloodType,
+      age: args.age,
+      gender: args.gender,
+    });
+
+    return { success: true };
+  },
+});
+
+/**
+ * Update the profile image URL for the current user's member profile
+ */
+export const updateProfileImage = mutation({
+  args: {
+    profileImageUrl: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
+      throw new Error("User must be authenticated");
+    }
+
+    const member = await ctx.db
+      .query("members")
+      .withIndex("by_user_id", (q) => q.eq("userId", userId))
+      .first();
+
+    if (!member) {
+      throw new Error("Member profile not found");
+    }
+
+    await ctx.db.patch(member._id, {
+      profileImageUrl: args.profileImageUrl,
+    });
+
+    return { success: true };
+  },
+});
+
+/**
+ * Clear the geolocation coordinates of the current user's member profile
+ */
+export const clearMemberLocation = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
+      throw new Error("User must be authenticated");
+    }
+
+    const member = await ctx.db
+      .query("members")
+      .withIndex("by_user_id", (q) => q.eq("userId", userId))
+      .first();
+
+    if (!member) {
+      throw new Error("Member profile not found");
+    }
+
+    await ctx.db.patch(member._id, {
+      latitude: undefined,
+      longitude: undefined,
+      locationPermissionGranted: false,
+    });
+
+    return { success: true };
   },
 });
 
