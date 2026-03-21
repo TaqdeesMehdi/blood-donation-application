@@ -62,15 +62,15 @@ export const DonorLandingSections = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-50 via-white to-red-50">
+    <div className="min-h-screen bg-red-50">
       {/* Section 1: How Our Application Helps */}
       <section className="py-20 px-4 md:px-8 lg:px-16">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-2">
+            <Badge className="mb-4 bg-red-600 text-white px-4 py-2">
               Save Lives Together
             </Badge>
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-red-600 via-pink-600 to-red-500 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-red-700">
               Transform Lives Through Blood Donation
             </h1>
             <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
@@ -83,7 +83,7 @@ export const DonorLandingSections = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="border-2 hover:border-red-300 transition-all hover:shadow-xl">
               <CardHeader>
-                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-pink-500 rounded-lg flex items-center justify-center mb-4">
+                <div className="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center mb-4">
                   <Heart className="w-6 h-6 text-white" />
                 </div>
                 <CardTitle className="text-2xl">
@@ -120,7 +120,7 @@ export const DonorLandingSections = () => {
 
             <Card className="border-2 hover:border-red-300 transition-all hover:shadow-xl">
               <CardHeader>
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center mb-4">
+                <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mb-4">
                   <Shield className="w-6 h-6 text-white" />
                 </div>
                 <CardTitle className="text-2xl">Verified & Safe</CardTitle>
@@ -155,7 +155,7 @@ export const DonorLandingSections = () => {
 
             <Card className="border-2 hover:border-red-300 transition-all hover:shadow-xl">
               <CardHeader>
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-4">
+                <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center mb-4">
                   <Users className="w-6 h-6 text-white" />
                 </div>
                 <CardTitle className="text-2xl">Community Impact</CardTitle>
@@ -195,10 +195,10 @@ export const DonorLandingSections = () => {
       <section className="py-20 px-4 md:px-8 lg:px-16 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 py-2">
+            <Badge className="mb-4 bg-blue-600 text-white px-4 py-2">
               Trusted Partners
             </Badge>
-            <h2 className="text-3xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+            <h2 className="text-3xl md:text-5xl font-bold mb-6 text-gray-800">
               Partner Hospitals in Multan
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
@@ -220,7 +220,7 @@ export const DonorLandingSections = () => {
                     fill
                     className="object-cover group-hover:scale-110 transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 bg-black/50" />
                   <div className="absolute bottom-0 left-0 right-0 p-6">
                     <div className="flex items-center gap-2 mb-2">
                       <MapPin className="w-5 h-5 text-red-400" />
@@ -260,10 +260,10 @@ export const DonorLandingSections = () => {
       <section className="py-20 px-4 md:px-8 lg:px-16">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2">
+            <Badge className="mb-4 bg-green-600 text-white px-4 py-2">
               Security First
             </Badge>
-            <h2 className="text-3xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+            <h2 className="text-3xl md:text-5xl font-bold mb-6 text-gray-800">
               How We Verify Donors
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
@@ -278,9 +278,9 @@ export const DonorLandingSections = () => {
                 key={index}
                 className="border-2 hover:border-red-200 transition-all hover:shadow-xl relative overflow-hidden group"
               >
-                <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-red-100 to-pink-100 rounded-bl-full opacity-50" />
+                <div className="absolute top-0 right-0 w-20 h-20 bg-red-100 rounded-bl-full opacity-50" />
                 <CardHeader>
-                  <div className="w-14 h-14 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <div className="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                     <step.icon className={`w-7 h-7 ${step.color}`} />
                   </div>
                   <div className="text-sm font-bold text-gray-400 mb-2">
@@ -295,7 +295,7 @@ export const DonorLandingSections = () => {
             ))}
           </div>
 
-          <Card className="border-2 border-red-200 bg-gradient-to-br from-red-50 to-pink-50">
+          <Card className="border-2 border-red-200 bg-red-50">
             <CardHeader>
               <CardTitle className="text-2xl flex items-center gap-2">
                 <Shield className="w-6 h-6 text-red-600" />
@@ -345,7 +345,7 @@ export const DonorLandingSections = () => {
             </p>
             <Button
               size="lg"
-              className="bg-gradient-to-r from-red-600 via-pink-600 to-red-500 hover:from-red-700 hover:via-pink-700 hover:to-red-600 text-white px-12"
+              className="bg-red-600 hover:bg-red-700 text-white px-12"
             >
               Start Verification Process
             </Button>

@@ -67,7 +67,7 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
           />
           <Button
             type="submit"
-            className="w-full bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700"
+            className="w-full bg-red-600 hover:bg-red-700"
             size="lg"
             disabled={isPending}
           >

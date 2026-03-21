@@ -172,7 +172,7 @@ export const UserProfileDialog = ({
                 Edit
               </Button>
             ) : (
-              <div className="flex gap-2">
+              <div className="flex gap-2 mt-4">
                 <Button
                   variant="default"
                   size="sm"

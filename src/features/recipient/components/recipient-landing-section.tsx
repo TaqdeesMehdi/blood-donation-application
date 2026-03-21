@@ -31,7 +31,7 @@ export const RecipientLandingSection = () => {
       title: "Find Donors Instantly",
       description:
         "Search and connect with verified blood donors in your area based on blood type compatibility",
-      color: "from-red-500 to-pink-500",
+      color: "bg-red-500",
       highlights: [
         "Advanced blood type matching",
         "Location-based donor search",
@@ -43,7 +43,7 @@ export const RecipientLandingSection = () => {
       title: "Emergency Alerts",
       description:
         "Send urgent blood requests to all matching donors in your vicinity when time is critical",
-      color: "from-orange-500 to-red-500",
+      color: "bg-orange-500",
       highlights: [
         "Instant notification to donors",
         "Priority emergency matching",
@@ -55,7 +55,7 @@ export const RecipientLandingSection = () => {
       title: "Verified & Safe",
       description:
         "All donors are medically verified with authenticated blood reports ensuring safety and reliability",
-      color: "from-blue-500 to-cyan-500",
+      color: "bg-blue-500",
       highlights: [
         "Medical report verification",
         "Background screening process",
@@ -131,7 +131,7 @@ export const RecipientLandingSection = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-rose-50 via-white to-pink-50">
+    <div className="min-h-screen bg-gray-50">
       {/* Location Control Section */}
       <section className="py-8 px-4 md:px-8 lg:px-16">
         <div className="max-w-2xl mx-auto">
@@ -143,10 +143,10 @@ export const RecipientLandingSection = () => {
       <section className="py-20 px-4 md:px-8 lg:px-16">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <Badge className="mb-6 bg-gradient-to-r from-red-500 to-pink-500 text-white px-6 py-2 text-sm font-semibold">
+            <Badge className="mb-6 bg-red-600 text-white px-6 py-2 text-sm font-semibold">
               Find Blood Donors Quickly & Safely
             </Badge>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-red-600 via-pink-600 to-rose-500 bg-clip-text text-transparent leading-tight">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-red-700 leading-tight">
               Your Life-Saving
               <br />
               Blood Donor Connection
@@ -160,7 +160,7 @@ export const RecipientLandingSection = () => {
               <Link href={"/recipient/dashboard"} prefetch={true}>
                 <Button
                   size="lg"
-                  className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white px-8 py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all"
+                  className="bg-red-600 hover:bg-red-700 text-white px-8 py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all"
                 >
                   <Search className="w-5 h-5 mr-2" />
                   Find Donors Now
@@ -185,7 +185,7 @@ export const RecipientLandingSection = () => {
                 className="border-2 hover:border-red-300 transition-all hover:shadow-lg"
               >
                 <CardContent className="pt-6 text-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-3">
                     <benefit.icon className="w-6 h-6 text-white" />
                   </div>
                   <div className="text-3xl font-bold text-red-600 mb-1">
@@ -208,7 +208,7 @@ export const RecipientLandingSection = () => {
       <section className="py-20 px-4 md:px-8 lg:px-16 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white px-4 py-2">
+            <Badge className="mb-4 bg-red-600 text-white px-4 py-2">
               Powerful Features
             </Badge>
             <h2 className="text-3xl md:text-5xl font-bold mb-4 text-gray-900">
@@ -228,7 +228,7 @@ export const RecipientLandingSection = () => {
               >
                 <CardHeader>
                   <div
-                    className={`w-14 h-14 bg-gradient-to-br ${feature.color} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
+                    className={`w-14 h-14 ${feature.color} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
                   >
                     <feature.icon className="w-7 h-7 text-white" />
                   </div>
@@ -259,7 +259,7 @@ export const RecipientLandingSection = () => {
       <section className="py-20 px-4 md:px-8 lg:px-16">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 py-2">
+            <Badge className="mb-4 bg-blue-600 text-white px-4 py-2">
               Simple Process
             </Badge>
             <h2 className="text-3xl md:text-5xl font-bold mb-4 text-gray-900">
@@ -302,11 +302,11 @@ export const RecipientLandingSection = () => {
       </section>
 
       {/* Why Choose Us Section */}
-      <section className="py-20 px-4 md:px-8 lg:px-16 bg-gradient-to-br from-red-50 to-pink-50">
+      <section className="py-20 px-4 md:px-8 lg:px-16 bg-red-50">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <Badge className="mb-4 bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-2">
+              <Badge className="mb-4 bg-red-600 text-white px-4 py-2">
                 Why Recipients Trust Us
               </Badge>
               <h2 className="text-3xl md:text-5xl font-bold mb-6 text-gray-900">
@@ -320,7 +320,7 @@ export const RecipientLandingSection = () => {
               </p>
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center flex-shrink-0">
                     <CheckCircle className="w-5 h-5 text-white" />
                   </div>
                   <div>
@@ -334,7 +334,7 @@ export const RecipientLandingSection = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
                     <Shield className="w-5 h-5 text-white" />
                   </div>
                   <div>
@@ -348,7 +348,7 @@ export const RecipientLandingSection = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center flex-shrink-0">
                     <Zap className="w-5 h-5 text-white" />
                   </div>
                   <div>
@@ -364,7 +364,7 @@ export const RecipientLandingSection = () => {
             </div>
             <div className="relative">
               <Card className="border-2 border-red-200 shadow-2xl">
-                <CardHeader className="bg-gradient-to-br from-red-500 to-pink-500 text-white">
+                <CardHeader className="bg-red-600 text-white">
                   <CardTitle className="text-2xl">
                     Ready to Find a Donor?
                   </CardTitle>
@@ -401,7 +401,7 @@ export const RecipientLandingSection = () => {
                     </div>
                     <Button
                       size="lg"
-                      className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-semibold shadow-lg"
+                      className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold shadow-lg"
                     >
                       <Heart className="w-5 h-5 mr-2" />
                       Start Finding Donors Now
@@ -415,7 +415,7 @@ export const RecipientLandingSection = () => {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-20 px-4 md:px-8 lg:px-16 bg-gradient-to-r from-red-600 to-pink-600 text-white">
+      <section className="py-20 px-4 md:px-8 lg:px-16 bg-red-700 text-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-5xl font-bold mb-6">
             Every Second Counts in Emergencies
