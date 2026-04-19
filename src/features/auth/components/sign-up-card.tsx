@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 
 import { SignInFlow } from "../types";
 import { useState } from "react";
-import { TriangleAlert } from "lucide-react";
+import { Eye, EyeOff, TriangleAlert } from "lucide-react";
 import { useAuthActions } from "@convex-dev/auth/react";
 
 interface SignUpCardProps {
@@ -23,6 +23,8 @@ export const SignUpCard = ({ setState }: SignUpCardProps) => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState("");
 
@@ -74,24 +76,58 @@ export const SignUpCard = ({ setState }: SignUpCardProps) => {
             placeholder="Email"
             className="h-11"
           />
-          <Input
-            disabled={isPending}
-            value={password}
-            required
-            type="password"
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            className="h-11"
-          />
-          <Input
-            disabled={isPending}
-            value={confirmPassword}
-            required
-            type="password"
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="Confirm Password"
-            className="h-11"
-          />
+          <div className="relative">
+            <Input
+              disabled={isPending}
+              value={password}
+              required
+              type={showPassword ? "text" : "password"}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              className="h-11 pr-10"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              disabled={isPending}
+              className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground disabled:cursor-not-allowed"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? (
+                <EyeOff className="size-4" />
+              ) : (
+                <Eye className="size-4" />
+              )}
+            </button>
+          </div>
+          <div className="relative">
+            <Input
+              disabled={isPending}
+              value={confirmPassword}
+              required
+              type={showConfirmPassword ? "text" : "password"}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirm Password"
+              className="h-11 pr-10"
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword((prev) => !prev)}
+              disabled={isPending}
+              className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground disabled:cursor-not-allowed"
+              aria-label={
+                showConfirmPassword
+                  ? "Hide confirm password"
+                  : "Show confirm password"
+              }
+            >
+              {showConfirmPassword ? (
+                <EyeOff className="size-4" />
+              ) : (
+                <Eye className="size-4" />
+              )}
+            </button>
+          </div>
           <Button
             type="submit"
             className="w-full bg-red-600 hover:bg-red-700"

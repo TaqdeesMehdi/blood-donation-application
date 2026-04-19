@@ -64,6 +64,7 @@ export const MemberProfileForm = () => {
       phone: "",
     },
   });
+  const selectedRole = form.watch("role");
 
   // Form submission handler
   const onSubmit = async (formData: MemberProfileFormInput) => {
@@ -128,31 +129,6 @@ export const MemberProfileForm = () => {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {/* Age Field */}
-            <FormField
-              control={form.control}
-              name="age"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Age <span className="text-destructive">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="Enter your age"
-                      {...field}
-                      disabled={isSubmitting}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    You must be between 18-65 years old
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             {/* Phone Field */}
             <FormField
               control={form.control}
@@ -288,6 +264,36 @@ export const MemberProfileForm = () => {
                   </FormControl>
                   <FormDescription>
                     This will determine your dashboard and features
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Age Field */}
+            <FormField
+              control={form.control}
+              name="age"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Age <span className="text-destructive">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Enter your age"
+                      min={selectedRole === "donor" ? 18 : 0}
+                      {...field}
+                      disabled={isSubmitting}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    {selectedRole === "donor"
+                      ? "Donors must be at least 18 years old"
+                      : selectedRole === "recipient"
+                        ? "Recipients can be in any age bracket"
+                        : "Select donor or recipient to see age requirement"}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
