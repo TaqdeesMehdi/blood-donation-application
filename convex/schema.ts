@@ -23,6 +23,7 @@ const schema = defineSchema({
     gender: v.union(v.literal("male"), v.literal("female"), v.literal("other")),
     location: v.string(),
     locationPermissionGranted: v.boolean(),
+    isEmergencyAlert: v.optional(v.boolean()),
     latitude: v.optional(v.number()),
     longitude: v.optional(v.number()),
     profileCompleted: v.boolean(),

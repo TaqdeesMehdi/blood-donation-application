@@ -54,6 +54,7 @@ export const createMemberProfile = mutation({
       locationPermissionGranted: args.locationPermissionGranted,
       phone: args.phone,
       bio: args.bio || "",
+      isEmergencyAlert: false,
       profileCompleted: true,
       createdAt: Date.now(),
     });
@@ -207,6 +208,40 @@ export const updateMemberProfile = mutation({
       bloodType: args.bloodType,
       age: args.age,
       gender: args.gender,
+    });
+
+    return { success: true };
+  },
+});
+
+/**
+ * Update the emergency alert status for the current recipient
+ */
+export const setEmergencyAlert = mutation({
+  args: {
+    isEmergencyAlert: v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
+      throw new Error("User must be authenticated");
+    }
+
+    const member = await ctx.db
+      .query("members")
+      .withIndex("by_user_id", (q) => q.eq("userId", userId))
+      .first();
+
+    if (!member) {
+      throw new Error("Member profile not found");
+    }
+
+    if (member.role !== "recipient") {
+      throw new Error("Only recipients can update emergency alerts");
+    }
+
+    await ctx.db.patch(member._id, {
+      isEmergencyAlert: args.isEmergencyAlert,
     });
 
     return { success: true };

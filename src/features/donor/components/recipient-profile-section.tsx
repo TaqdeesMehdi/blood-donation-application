@@ -34,6 +34,7 @@ type Recipient = {
   bio?: string;
   latitude?: number;
   longitude?: number;
+  isEmergencyAlert?: boolean;
 };
 
 export const RecipientProfileSection = ({
@@ -75,7 +76,11 @@ export const RecipientProfileSection = ({
           {recipients.map((recipient) => (
             <div
               key={recipient._id}
-              className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
+              className={`bg-white border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow ${
+                recipient.isEmergencyAlert
+                  ? "emergency-alert-card"
+                  : "border-gray-200"
+              }`}
             >
               <div className="flex items-center space-x-3">
                 {/* Avatar */}
