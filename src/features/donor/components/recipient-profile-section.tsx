@@ -16,7 +16,17 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MapPin } from "lucide-react";
+import {
+  AlertTriangle,
+  Calendar,
+  Clock,
+  Droplet,
+  Mail,
+  MapPin,
+  Phone,
+  Scale,
+  Users,
+} from "lucide-react";
 
 interface RecipientProfileSectionProps {
   onLocationClick?: (recipient: Recipient) => void;
@@ -36,6 +46,8 @@ type Recipient = {
   latitude?: number;
   longitude?: number;
   isEmergencyAlert?: boolean;
+  weight?: number;
+  createdAt?: number;
 };
 
 export const RecipientProfileSection = ({
@@ -46,6 +58,15 @@ export const RecipientProfileSection = ({
   const [selectedRecipient, setSelectedRecipient] = useState<Recipient | null>(
     null,
   );
+
+  const formatDate = (timestamp?: number) => {
+    if (!timestamp) return "N/A";
+    return new Date(timestamp).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   // Loading state
   if (recipients === undefined) {
@@ -175,99 +196,203 @@ export const RecipientProfileSection = ({
           if (!val) setSelectedRecipient(null);
         }}
       >
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>
-              {selectedRecipient
-                ? selectedRecipient.userName
-                : "Recipient Details"}
-            </DialogTitle>
-            <DialogDescription>
-              Detailed information about the recipient and their requirements.
-            </DialogDescription>
-            {selectedRecipient?.isEmergencyAlert && (
-              <Badge variant="destructive" className="w-fit">
-                Emergency Alert
-              </Badge>
-            )}
-          </DialogHeader>
-
+        <DialogContent className="max-w-3xl p-0 overflow-hidden">
           {selectedRecipient && (
-            <div className="space-y-4 mt-4">
-              <div className="flex items-center gap-4">
-                <div className="flex-shrink-0">
-                  {selectedRecipient.userImage ? (
-                    <Image
-                      src={selectedRecipient.userImage}
-                      alt={selectedRecipient.userName}
-                      width={72}
-                      height={72}
-                      className="rounded-full"
-                    />
-                  ) : (
-                    <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center">
-                      <span className="text-red-600 font-bold text-xl">
-                        {selectedRecipient.userName.charAt(0).toUpperCase()}
-                      </span>
+            <>
+              <div className="bg-gradient-to-r from-red-600 via-rose-600 to-orange-500 p-6 text-white">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="relative">
+                      {selectedRecipient.userImage ? (
+                        <Image
+                          src={selectedRecipient.userImage}
+                          alt={selectedRecipient.userName}
+                          width={72}
+                          height={72}
+                          className="rounded-full object-cover size-16 ring-4 ring-white/30"
+                        />
+                      ) : (
+                        <div className="size-16 rounded-full bg-white/20 flex items-center justify-center ring-4 ring-white/30">
+                          <span className="text-white font-bold text-2xl">
+                            {selectedRecipient.userName.charAt(0).toUpperCase()}
+                          </span>
+                        </div>
+                      )}
                     </div>
-                  )}
+                    <div>
+                      <DialogHeader className="text-left">
+                        <DialogTitle className="text-2xl font-semibold text-white">
+                          {selectedRecipient.userName}
+                        </DialogTitle>
+                        <DialogDescription className="text-red-100">
+                          Recipient profile and request details.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        <Badge
+                          variant="outline"
+                          className="border-white/40 text-white"
+                        >
+                          Blood {selectedRecipient.bloodType ?? "N/A"}
+                        </Badge>
+                        <Badge
+                          variant="outline"
+                          className="border-white/40 text-white"
+                        >
+                          Age {selectedRecipient.age ?? "N/A"}
+                        </Badge>
+                        <Badge
+                          variant="outline"
+                          className="border-white/40 text-white"
+                        >
+                          Weight {selectedRecipient.weight ?? "N/A"}
+                        </Badge>
+                        {selectedRecipient.isEmergencyAlert && (
+                          <Badge className="bg-white/20 text-white border-white/30">
+                            <AlertTriangle className="size-3" /> Emergency
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-red-100">
+                    {selectedRecipient.latitude &&
+                      selectedRecipient.longitude && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-1">
+                          <MapPin className="size-3" /> Live location
+                        </span>
+                      )}
+                    <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-1">
+                      <Clock className="size-3" />
+                      Member since {formatDate(selectedRecipient.createdAt)}
+                    </span>
+                  </div>
                 </div>
+              </div>
 
-                <div>
-                  <h4 className="text-lg font-bold">
-                    {selectedRecipient.userName}
-                  </h4>
-                  <p className="text-sm text-gray-600">
-                    {selectedRecipient.userEmail}
-                  </p>
-                  {selectedRecipient.phone && (
-                    <p className="text-sm text-gray-600">
-                      Phone: {selectedRecipient.phone}
+              <div className="bg-white p-6 space-y-6">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                    <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+                      Contact
                     </p>
-                  )}
+                    <div className="mt-3 space-y-3">
+                      <div>
+                        <div className="flex items-center gap-2 text-xs text-slate-500">
+                          <Mail className="size-4" /> Email
+                        </div>
+                        <p className="mt-1 text-sm font-medium text-slate-800">
+                          {selectedRecipient.userEmail ?? "Not provided"}
+                        </p>
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2 text-xs text-slate-500">
+                          <Phone className="size-4" /> Phone
+                        </div>
+                        <p className="mt-1 text-sm font-medium text-slate-800">
+                          {selectedRecipient.phone ?? "Not provided"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                    <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+                      Personal
+                    </p>
+                    <div className="mt-3 grid grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <div className="flex items-center gap-2 text-xs text-slate-500">
+                          <Calendar className="size-4" /> Age
+                        </div>
+                        <p className="mt-1 font-medium text-slate-800">
+                          {selectedRecipient.age
+                            ? `${selectedRecipient.age} yrs`
+                            : "N/A"}
+                        </p>
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2 text-xs text-slate-500">
+                          <Users className="size-4" /> Gender
+                        </div>
+                        <p className="mt-1 font-medium text-slate-800 capitalize">
+                          {selectedRecipient.gender ?? "N/A"}
+                        </p>
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2 text-xs text-slate-500">
+                          <Droplet className="size-4" /> Blood
+                        </div>
+                        <p className="mt-1 font-medium text-slate-800">
+                          {selectedRecipient.bloodType ?? "N/A"}
+                        </p>
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2 text-xs text-slate-500">
+                          <Scale className="size-4" /> Weight
+                        </div>
+                        <p className="mt-1 font-medium text-slate-800">
+                          {selectedRecipient.weight
+                            ? `${selectedRecipient.weight} kg`
+                            : "N/A"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                    <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+                      Location
+                    </p>
+                    <div className="mt-3 space-y-3">
+                      <div>
+                        <div className="flex items-center gap-2 text-xs text-slate-500">
+                          <MapPin className="size-4" /> Address
+                        </div>
+                        <p className="mt-1 text-sm font-medium text-slate-800">
+                          {selectedRecipient.location ?? "Not provided"}
+                        </p>
+                      </div>
+                      {selectedRecipient.latitude &&
+                        selectedRecipient.longitude && (
+                          <div className="text-xs text-slate-500">
+                            Coordinates: {selectedRecipient.latitude.toFixed(4)}
+                            , {selectedRecipient.longitude.toFixed(4)}
+                          </div>
+                        )}
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                    <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+                      Account
+                    </p>
+                    <div className="mt-3 space-y-3">
+                      <div>
+                        <div className="flex items-center gap-2 text-xs text-slate-500">
+                          <Clock className="size-4" /> Member since
+                        </div>
+                        <p className="mt-1 text-sm font-medium text-slate-800">
+                          {formatDate(selectedRecipient.createdAt)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+                    Bio
+                  </p>
+                  <p className="mt-3 text-sm text-slate-700 leading-relaxed">
+                    {selectedRecipient.bio?.trim() || "No bio provided."}
+                  </p>
                 </div>
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <div className="text-xs text-gray-500">Age</div>
-                  <div className="font-medium">
-                    {selectedRecipient.age} years
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="text-xs text-gray-500">Gender</div>
-                  <div className="font-medium capitalize">
-                    {selectedRecipient.gender}
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="text-xs text-gray-500">Blood Type</div>
-                  <div className="font-medium inline-flex items-center px-2 py-0.5 rounded text-sm bg-red-100 text-red-800">
-                    {selectedRecipient.bloodType}
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="text-xs text-gray-500">Location</div>
-                  <div className="font-medium">
-                    {selectedRecipient.location}
-                  </div>
-                </div>
-              </div>
-
-              {selectedRecipient.bio && (
-                <div>
-                  <div className="text-xs text-gray-500">Bio</div>
-                  <div className="text-gray-700">{selectedRecipient.bio}</div>
-                </div>
-              )}
-            </div>
+            </>
           )}
 
-          <DialogFooter className="mt-6">
+          <DialogFooter className="bg-white px-6 pb-6">
             <div className="flex justify-end w-full">
               <Button
                 variant="ghost"

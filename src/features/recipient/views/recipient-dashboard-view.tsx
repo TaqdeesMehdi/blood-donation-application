@@ -15,14 +15,17 @@ export const RecipientDashboardView = () => {
   const isEmergencyActive = currentProfile?.isEmergencyAlert ?? false;
 
   const handleEmergencyAlert = async () => {
-    if (isEmergencyActive || isSubmitting) {
+    if (isSubmitting || currentProfile === undefined) {
       return;
     }
 
     try {
       setIsSubmitting(true);
-      await setEmergencyAlert({ isEmergencyAlert: true });
-      toast.success("Emergency alert activated");
+      const nextState = !isEmergencyActive;
+      await setEmergencyAlert({ isEmergencyAlert: nextState });
+      toast.success(
+        nextState ? "Emergency alert activated" : "Emergency alert deactivated",
+      );
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Failed to send alert";
@@ -44,18 +47,20 @@ export const RecipientDashboardView = () => {
           </p>
         </div>
         <Button
-          className="bg-red-600 hover:bg-red-700 text-white"
-          onClick={handleEmergencyAlert}
-          disabled={
-            isEmergencyActive || isSubmitting || currentProfile === undefined
+          className={
+            isEmergencyActive
+              ? "bg-gray-200 text-red-700 hover:bg-gray-300"
+              : "bg-red-600 hover:bg-red-700 text-white"
           }
+          onClick={handleEmergencyAlert}
+          disabled={isSubmitting || currentProfile === undefined}
         >
           <AlertTriangle className="size-4 mr-2" />
           {isEmergencyActive
-            ? "Emergency Alert Active"
+            ? "Deactivate Emergency Alert"
             : isSubmitting
               ? "Sending Alert..."
-              : "Send Emergency Alert"}
+              : "Activate Emergency Alert"}
         </Button>
       </div>
       <DonorProfileSection />
