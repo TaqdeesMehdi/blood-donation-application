@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { toast } from "sonner";
@@ -28,6 +28,7 @@ import {
   MapPin,
   Droplet,
   Calendar,
+  Scale,
   Users,
   Pencil,
   X,
@@ -55,6 +56,7 @@ interface UserProfileDialogProps {
     phone: string;
     bloodType: BloodType;
     age: number;
+    weight?: number;
     gender: Gender;
     location: string;
     bio: string;
@@ -83,10 +85,12 @@ export const UserProfileDialog = ({
 }: UserProfileDialogProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [uploadInput, setUploadInput] = useState<HTMLInputElement | null>(null);
   const [editValues, setEditValues] = useState({
     phone: member.phone,
     bloodType: member.bloodType as BloodType,
     age: member.age,
+    weight: member.weight ?? 0,
     gender: member.gender as Gender,
   });
 
@@ -94,6 +98,10 @@ export const UserProfileDialog = ({
   const updateProfileImage = useMutation(api.members.updateProfileImage);
 
   const ikUploadRef = useRef<HTMLInputElement>(null);
+  const handleUploadInputRef = (node: HTMLInputElement | null) => {
+    ikUploadRef.current = node;
+    setUploadInput(node);
+  };
 
   const displayName = user.name ?? user.email ?? "User";
   const avatarFallback = displayName.charAt(0).toUpperCase();
@@ -110,10 +118,17 @@ export const UserProfileDialog = ({
 
   const handleSave = async () => {
     try {
+      const weightValue = Number(editValues.weight);
+      if (!Number.isFinite(weightValue) || weightValue <= 0) {
+        toast.error("Please enter a valid weight");
+        return;
+      }
+
       await updateProfile({
         phone: editValues.phone,
         bloodType: editValues.bloodType,
         age: Number(editValues.age),
+        weight: weightValue,
         gender: editValues.gender,
       });
       toast.success("Profile updated successfully");
@@ -131,6 +146,7 @@ export const UserProfileDialog = ({
       phone: member.phone,
       bloodType: member.bloodType,
       age: member.age,
+      weight: member.weight ?? 0,
       gender: member.gender,
     });
     setIsEditing(false);
@@ -154,6 +170,22 @@ export const UserProfileDialog = ({
     toast.error("Image upload failed: " + (err.message ?? "Unknown error"));
     setIsUploadingImage(false);
   };
+
+  useEffect(() => {
+    if (!uploadInput) {
+      return;
+    }
+
+    const handleChange = () => {
+      const hasFile = !!uploadInput.files && uploadInput.files.length > 0;
+      setIsUploadingImage(hasFile);
+    };
+
+    uploadInput.addEventListener("change", handleChange);
+    return () => {
+      uploadInput.removeEventListener("change", handleChange);
+    };
+  }, [uploadInput]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -217,7 +249,6 @@ export const UserProfileDialog = ({
                   type="button"
                   className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                   onClick={() => {
-                    setIsUploadingImage(true);
                     ikUploadRef.current?.click();
                   }}
                   disabled={isUploadingImage}
@@ -229,7 +260,7 @@ export const UserProfileDialog = ({
                   )}
                 </button>
                 <IKUpload
-                  ref={ikUploadRef}
+                  ref={handleUploadInputRef}
                   fileName={`profile-${member._id}`}
                   folder="/profiles"
                   className="hidden"
@@ -384,6 +415,35 @@ export const UserProfileDialog = ({
                     />
                   ) : (
                     <p className="text-sm font-medium">{member.age} years</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Weight */}
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-indigo-100 rounded-lg flex-shrink-0">
+                  <Scale className="size-5 text-indigo-600" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs text-gray-500">Weight</p>
+                  {isEditing ? (
+                    <Input
+                      type="number"
+                      min={1}
+                      step="0.1"
+                      value={editValues.weight}
+                      onChange={(e) =>
+                        setEditValues((v) => ({
+                          ...v,
+                          weight: Number(e.target.value),
+                        }))
+                      }
+                      className="h-7 text-sm mt-0.5"
+                    />
+                  ) : (
+                    <p className="text-sm font-medium">
+                      {member.weight ? `${member.weight} kg` : "Not provided"}
+                    </p>
                   )}
                 </div>
               </div>

@@ -56,6 +56,7 @@ export const MemberProfileForm = () => {
     resolver: zodResolver(memberProfileFormSchema),
     defaultValues: {
       age: "",
+      weight: "",
       bloodType: "",
       gender: "",
       role: "",
@@ -74,6 +75,7 @@ export const MemberProfileForm = () => {
       // Convert form data to the correct types
       const data: MemberProfileFormData = {
         age: parseInt(formData.age, 10),
+        weight: Number.parseFloat(formData.weight),
         bloodType: formData.bloodType as (typeof bloodTypes)[number],
         gender: formData.gender as (typeof genders)[number],
         role: formData.role as (typeof roles)[number],
@@ -85,6 +87,7 @@ export const MemberProfileForm = () => {
       // Call Convex mutation to create profile
       await createProfile({
         age: data.age,
+        weight: data.weight,
         bloodType: data.bloodType,
         gender: data.gender,
         role: data.role,
@@ -294,6 +297,33 @@ export const MemberProfileForm = () => {
                       : selectedRole === "recipient"
                         ? "Recipients can be in any age bracket"
                         : "Select donor or recipient to see age requirement"}
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Weight Field */}
+            <FormField
+              control={form.control}
+              name="weight"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Weight (kg) <span className="text-destructive">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Enter your weight"
+                      min={1}
+                      step="0.1"
+                      {...field}
+                      disabled={isSubmitting}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Helps donors and recipients understand eligibility
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

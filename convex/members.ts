@@ -9,6 +9,7 @@ import { getAuthUserId } from "@convex-dev/auth/server";
 export const createMemberProfile = mutation({
   args: {
     age: v.number(),
+    weight: v.number(),
     bloodType: v.union(
       v.literal("A+"),
       v.literal("A-"),
@@ -47,6 +48,7 @@ export const createMemberProfile = mutation({
     const memberId = await ctx.db.insert("members", {
       userId,
       age: args.age,
+      weight: args.weight,
       bloodType: args.bloodType,
       gender: args.gender,
       role: args.role,
@@ -186,6 +188,7 @@ export const updateMemberProfile = mutation({
       v.literal("O-"),
     ),
     age: v.number(),
+    weight: v.number(),
     gender: v.union(v.literal("male"), v.literal("female"), v.literal("other")),
   },
   handler: async (ctx, args) => {
@@ -207,6 +210,7 @@ export const updateMemberProfile = mutation({
       phone: args.phone,
       bloodType: args.bloodType,
       age: args.age,
+      weight: args.weight,
       gender: args.gender,
     });
 

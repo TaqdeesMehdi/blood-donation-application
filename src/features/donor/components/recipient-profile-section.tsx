@@ -6,6 +6,7 @@ import { api } from "../../../../convex/_generated/api";
 import { RingLoader } from "react-spinners";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -184,6 +185,11 @@ export const RecipientProfileSection = ({
             <DialogDescription>
               Detailed information about the recipient and their requirements.
             </DialogDescription>
+            {selectedRecipient?.isEmergencyAlert && (
+              <Badge variant="destructive" className="w-fit">
+                Emergency Alert
+              </Badge>
+            )}
           </DialogHeader>
 
           {selectedRecipient && (

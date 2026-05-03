@@ -20,6 +20,7 @@ const schema = defineSchema({
       v.literal("O-"),
     ),
     age: v.number(),
+    weight: v.optional(v.number()),
     gender: v.union(v.literal("male"), v.literal("female"), v.literal("other")),
     location: v.string(),
     locationPermissionGranted: v.boolean(),

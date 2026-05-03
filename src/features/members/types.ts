@@ -41,6 +41,17 @@ export const memberProfileFormSchema = z
         { message: "Please enter a valid age" },
       ),
 
+    weight: z
+      .string({ message: "Weight is required" })
+      .min(1, { message: "Weight is required" })
+      .refine(
+        (value) => {
+          const weight = Number.parseFloat(value);
+          return Number.isFinite(weight) && weight > 0;
+        },
+        { message: "Please enter a valid weight" },
+      ),
+
     bloodType: z
       .string({ message: "Blood type is required" })
       .min(1, { message: "Please select your blood type" }),
@@ -49,11 +60,9 @@ export const memberProfileFormSchema = z
       .string({ message: "Gender is required" })
       .min(1, { message: "Please select your gender" }),
 
-    role: z
-      .string({ message: "Role is required" })
-      .min(1, {
-        message: "Please select whether you are a donor or recipient",
-      }),
+    role: z.string({ message: "Role is required" }).min(1, {
+      message: "Please select whether you are a donor or recipient",
+    }),
 
     location: z
       .string({
@@ -94,6 +103,7 @@ export const memberProfileFormSchema = z
 export const memberProfileSchema = memberProfileFormSchema
   .transform((data) => ({
     age: parseInt(data.age, 10),
+    weight: Number.parseFloat(data.weight),
     bloodType: data.bloodType as (typeof bloodTypes)[number],
     gender: data.gender as (typeof genders)[number],
     role: data.role as (typeof roles)[number],
@@ -104,6 +114,10 @@ export const memberProfileSchema = memberProfileFormSchema
   .refine((data) => !isNaN(data.age) && data.age >= 0, {
     message: "Please enter a valid age",
     path: ["age"],
+  })
+  .refine((data) => Number.isFinite(data.weight) && data.weight > 0, {
+    message: "Please enter a valid weight",
+    path: ["weight"],
   })
   .refine((data) => data.role !== "donor" || data.age >= 18, {
     message: "Donors must be at least 18 years old",
