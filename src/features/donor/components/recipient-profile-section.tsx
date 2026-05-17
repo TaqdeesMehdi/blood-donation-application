@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { RingLoader } from "react-spinners";
@@ -26,6 +26,8 @@ import {
   Phone,
   Scale,
   Users,
+  Search,
+  X,
 } from "lucide-react";
 
 interface RecipientProfileSectionProps {
@@ -58,6 +60,28 @@ export const RecipientProfileSection = ({
   const [selectedRecipient, setSelectedRecipient] = useState<Recipient | null>(
     null,
   );
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
+  const filteredRecipients = useMemo(() => {
+    if (!recipients || !searchQuery.trim()) {
+      return recipients || [];
+    }
+
+    const query = searchQuery.toLowerCase().trim();
+    return recipients.filter((recipient) => {
+      const name = recipient.userName?.toLowerCase() || "";
+      const email = recipient.userEmail?.toLowerCase() || "";
+      const bloodType = recipient.bloodType?.toLowerCase() || "";
+      const location = recipient.location?.toLowerCase() || "";
+
+      return (
+        name.includes(query) ||
+        email.includes(query) ||
+        bloodType.includes(query) ||
+        location.includes(query)
+      );
+    });
+  }, [recipients, searchQuery]);
 
   const formatDate = (timestamp?: number) => {
     if (!timestamp) return "N/A";
@@ -86,107 +110,158 @@ export const RecipientProfileSection = ({
     );
   }
 
+  const hasSearchResults = filteredRecipients.length > 0;
+
   return (
     <div className="p-2 space-y-4 ">
-      <h2 className="text-2xl font-bold text-gray-800 mb-4">
-        Recipients Looking for Blood
-      </h2>
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-gray-900">
+            Recipients Looking for Blood
+          </h2>
+          <span className="text-sm font-medium text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+            {filteredRecipients.length} result
+            {filteredRecipients.length !== 1 ? "s" : ""}
+          </span>
+        </div>
+
+        {/* Search Bar */}
+        <div className="relative">
+          <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search by name, blood type, location, or email..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-3 top-3 p-0.5 text-gray-400 hover:text-gray-600"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          )}
+        </div>
+      </div>
 
       {/* Scrollable container for cards */}
-      <ScrollArea className="h-[600px] max-h-[70vh] rounded-lg border border-gray-100 p-2">
-        <div className="flex flex-col gap-y-4">
-          {recipients.map((recipient) => (
-            <div
-              key={recipient._id}
-              className={`bg-white border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow ${
-                recipient.isEmergencyAlert
-                  ? "emergency-alert-card"
-                  : "border-gray-200"
-              }`}
-            >
-              <div className="flex items-center space-x-3">
-                {/* Avatar */}
-                <div className="flex-shrink-0">
-                  {recipient.userImage ? (
-                    <Image
-                      src={recipient.userImage}
-                      alt={recipient.userName}
-                      width={48}
-                      height={48}
-                      className="rounded-full"
-                    />
-                  ) : (
-                    <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
-                      <span className="text-red-600 font-bold text-lg">
-                        {recipient.userName.charAt(0).toUpperCase()}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Info */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-gray-900 truncate">
-                      {recipient.userName}
-                    </h3>
-                    {recipient.latitude && recipient.longitude && (
-                      <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-green-100 text-green-700">
-                        <MapPin className="size-3 mr-0.5" />
-                        Live
-                      </span>
+      {hasSearchResults ? (
+        <ScrollArea className="h-[600px] max-h-[70vh] rounded-lg border border-gray-200 bg-gray-50 p-3">
+          <div className="flex flex-col gap-y-3">
+            {filteredRecipients.map((recipient) => (
+              <div
+                key={recipient._id}
+                className={`bg-white border rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 ${
+                  recipient.isEmergencyAlert
+                    ? "border-red-300 bg-red-50/30 ring-1 ring-red-200"
+                    : "border-gray-200 hover:border-gray-300"
+                }`}
+              >
+                <div className="flex items-center space-x-3">
+                  {/* Avatar */}
+                  <div className="flex-shrink-0">
+                    {recipient.userImage ? (
+                      <Image
+                        src={recipient.userImage}
+                        alt={recipient.userName}
+                        width={48}
+                        height={48}
+                        className="rounded-full"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                        <span className="text-red-600 font-bold text-lg">
+                          {recipient.userName.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
                     )}
                   </div>
-                  <p className="text-sm text-gray-500">{recipient.userEmail}</p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
-                      {recipient.bloodType}
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      {recipient.age} years
-                    </span>
+
+                  {/* Info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold text-gray-900 truncate">
+                        {recipient.userName}
+                      </h3>
+                      {recipient.latitude && recipient.longitude && (
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-green-100 text-green-700">
+                          <MapPin className="size-3 mr-0.5" />
+                          Live
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm text-gray-500">
+                      {recipient.userEmail}
+                    </p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+                        {recipient.bloodType}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {recipient.age} years
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Additional Info */}
+                <div className="mt-3 pt-3 border-t border-gray-100">
+                  <div className="flex items-center justify-between text-xs text-gray-600">
+                    <span>{recipient.location}</span>
+                    <span className="capitalize">{recipient.gender}</span>
+                  </div>
+
+                  {/* Action buttons */}
+                  <div className="mt-3 flex items-center justify-end gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setSelectedRecipient(recipient);
+                        setOpen(true);
+                      }}
+                    >
+                      View Details
+                    </Button>
+
+                    <Button
+                      variant="default"
+                      className="bg-red-500 hover:bg-red-600"
+                      onClick={() => {
+                        if (onLocationClick) {
+                          onLocationClick(recipient);
+                        }
+                      }}
+                      disabled={!recipient.latitude || !recipient.longitude}
+                    >
+                      <MapPin className="size-4 mr-1" />
+                      View Location
+                    </Button>
                   </div>
                 </div>
               </div>
-
-              {/* Additional Info */}
-              <div className="mt-3 pt-3 border-t border-gray-100">
-                <div className="flex items-center justify-between text-xs text-gray-600">
-                  <span>{recipient.location}</span>
-                  <span className="capitalize">{recipient.gender}</span>
-                </div>
-
-                {/* Action buttons */}
-                <div className="mt-3 flex items-center justify-end gap-2">
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setSelectedRecipient(recipient);
-                      setOpen(true);
-                    }}
-                  >
-                    View Details
-                  </Button>
-
-                  <Button
-                    variant="default"
-                    className="bg-red-500 hover:bg-red-600"
-                    onClick={() => {
-                      if (onLocationClick) {
-                        onLocationClick(recipient);
-                      }
-                    }}
-                    disabled={!recipient.latitude || !recipient.longitude}
-                  >
-                    <MapPin className="size-4 mr-1" />
-                    View Location
-                  </Button>
-                </div>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        </ScrollArea>
+      ) : (
+        <div className="flex flex-col items-center justify-center p-12 rounded-lg border border-dashed border-gray-300 bg-gray-50">
+          <Search className="h-12 w-12 text-gray-300 mb-3" />
+          <p className="text-gray-500 text-center">
+            {searchQuery
+              ? "No recipients match your search"
+              : "No recipients found"}
+          </p>
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="mt-3 text-sm text-red-600 hover:text-red-700 font-medium"
+            >
+              Clear search
+            </button>
+          )}
         </div>
-      </ScrollArea>
+      )}
 
       {/* Details Dialog */}
       <Dialog

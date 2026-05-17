@@ -73,7 +73,7 @@ export const UserButton = () => {
             className="cursor-pointer"
           >
             <LayoutDashboard className="size-4 mr-2" />
-            Go to Dashboard
+            {role === "donor" ? "Find Recipients" : "Find Donors"}
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
