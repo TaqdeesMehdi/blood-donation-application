@@ -114,6 +114,28 @@ export const RecipientProfileSection = ({
 
   return (
     <div className="p-2 space-y-4 ">
+      {/* Glow animation keyframes, scoped to this component */}
+      <style jsx global>{`
+        @keyframes emergency-glow {
+          0%,
+          100% {
+            box-shadow:
+              0 0 0 1px rgba(239, 68, 68, 0.4),
+              0 0 12px 2px rgba(239, 68, 68, 0.35),
+              0 0 0 rgba(239, 68, 68, 0);
+          }
+          50% {
+            box-shadow:
+              0 0 0 1px rgba(239, 68, 68, 0.6),
+              0 0 28px 8px rgba(239, 68, 68, 0.55),
+              0 0 40px 12px rgba(239, 68, 68, 0.15);
+          }
+        }
+        .emergency-card-glow {
+          animation: emergency-glow 1.8s ease-in-out infinite;
+        }
+      `}</style>
+
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold text-gray-900">
@@ -153,12 +175,14 @@ export const RecipientProfileSection = ({
             {filteredRecipients.map((recipient) => (
               <div
                 key={recipient._id}
-                className={`bg-white border rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 ${
+                className={`bg-white border rounded-lg p-4 shadow-sm transition-all duration-200 relative ${
                   recipient.isEmergencyAlert
-                    ? "border-red-300 bg-red-50/30 ring-1 ring-red-200"
-                    : "border-gray-200 hover:border-gray-300"
+                    ? "border-red-400 bg-red-50/40 emergency-card-glow"
+                    : "border-gray-200 hover:border-gray-300 hover:shadow-md"
                 }`}
               >
+                {/* Emergency ribbon */}
+
                 <div className="flex items-center space-x-3">
                   {/* Avatar */}
                   <div className="flex-shrink-0">
@@ -168,10 +192,20 @@ export const RecipientProfileSection = ({
                         alt={recipient.userName}
                         width={48}
                         height={48}
-                        className="rounded-full"
+                        className={`rounded-full ${
+                          recipient.isEmergencyAlert
+                            ? "ring-2 ring-red-400 ring-offset-2"
+                            : ""
+                        }`}
                       />
                     ) : (
-                      <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                      <div
+                        className={`w-12 h-12 rounded-full bg-red-100 flex items-center justify-center ${
+                          recipient.isEmergencyAlert
+                            ? "ring-2 ring-red-400 ring-offset-2"
+                            : ""
+                        }`}
+                      >
                         <span className="text-red-600 font-bold text-lg">
                           {recipient.userName.charAt(0).toUpperCase()}
                         </span>
