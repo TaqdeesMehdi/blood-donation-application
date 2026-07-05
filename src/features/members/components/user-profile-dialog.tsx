@@ -125,6 +125,7 @@ export const UserProfileDialog = ({
       }
 
       await updateProfile({
+        role: member.role,
         phone: editValues.phone,
         bloodType: editValues.bloodType,
         age: Number(editValues.age),
@@ -154,7 +155,7 @@ export const UserProfileDialog = ({
 
   const handleImageUploadSuccess = async (res: { url: string }) => {
     try {
-      await updateProfileImage({ profileImageUrl: res.url });
+      await updateProfileImage({ role: member.role, profileImageUrl: res.url });
       toast.success("Profile picture updated");
     } catch (error: unknown) {
       toast.error(

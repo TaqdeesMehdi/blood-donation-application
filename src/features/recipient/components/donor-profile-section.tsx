@@ -44,6 +44,8 @@ type Donor = {
   latitude?: number;
   longitude?: number;
   createdAt?: number;
+  bloodReportStatus?: "eligible" | "not_eligible" | "needs_review";
+  bloodReportReviewedAt?: number;
 };
 
 export const DonorProfileSection = () => {
@@ -80,6 +82,34 @@ export const DonorProfileSection = () => {
       month: "long",
       day: "numeric",
     });
+  };
+
+  const getBloodReportBadge = (status?: Donor["bloodReportStatus"]) => {
+    if (!status) {
+      return {
+        label: "Not screened",
+        className: "border-slate-200 bg-slate-100 text-slate-700",
+      };
+    }
+
+    if (status === "eligible") {
+      return {
+        label: "Eligible",
+        className: "border-emerald-200 bg-emerald-50 text-emerald-700",
+      };
+    }
+
+    if (status === "not_eligible") {
+      return {
+        label: "Not eligible",
+        className: "border-rose-200 bg-rose-50 text-rose-700",
+      };
+    }
+
+    return {
+      label: "Needs review",
+      className: "border-amber-200 bg-amber-50 text-amber-700",
+    };
   };
 
   if (donors === undefined) {
@@ -169,6 +199,14 @@ export const DonorProfileSection = () => {
                       <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
                         {donor.bloodType}
                       </span>
+                      <Badge
+                        variant="outline"
+                        className={
+                          getBloodReportBadge(donor.bloodReportStatus).className
+                        }
+                      >
+                        {getBloodReportBadge(donor.bloodReportStatus).label}
+                      </Badge>
                       <span className="text-xs text-gray-500">
                         {donor.age} years
                       </span>
@@ -260,6 +298,15 @@ export const DonorProfileSection = () => {
                           className="border-white/40 text-white"
                         >
                           Blood {selectedDonor.bloodType ?? "N/A"}
+                        </Badge>
+                        <Badge
+                          variant="outline"
+                          className={`${getBloodReportBadge(selectedDonor.bloodReportStatus).className} bg-white/10 border-white/30 text-white`}
+                        >
+                          {
+                            getBloodReportBadge(selectedDonor.bloodReportStatus)
+                              .label
+                          }
                         </Badge>
                         <Badge
                           variant="outline"
@@ -394,6 +441,23 @@ export const DonorProfileSection = () => {
                         <p className="mt-1 text-sm font-medium text-slate-800">
                           {formatDate(selectedDonor.createdAt)}
                         </p>
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2 text-xs text-slate-500">
+                          <Droplet className="size-4" /> Report status
+                        </div>
+                        <Badge
+                          variant="outline"
+                          className={
+                            getBloodReportBadge(selectedDonor.bloodReportStatus)
+                              .className + " mt-1"
+                          }
+                        >
+                          {
+                            getBloodReportBadge(selectedDonor.bloodReportStatus)
+                              .label
+                          }
+                        </Badge>
                       </div>
                     </div>
                   </div>

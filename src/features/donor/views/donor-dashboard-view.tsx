@@ -6,6 +6,7 @@ import { api } from "../../../../convex/_generated/api";
 import { RecipientMapLocation } from "../components/recipient-map-location";
 import { RecipientProfileSection } from "../components/recipient-profile-section";
 import { AlertTriangle, UserPlus, Users } from "lucide-react";
+import { BloodReportAnalysisDialog } from "../components/blood-report-analysis-dialog";
 
 type Recipient = {
   _id: string;
@@ -99,6 +100,25 @@ export const DonorDashboardView = () => {
             </div>
             <p className="text-xs text-gray-500">Last 7 days</p>
           </div>
+        </div>
+      </div>
+
+      <div className="overflow-hidden rounded-2xl border border-red-100 bg-gradient-to-r from-red-700 via-rose-700 to-red-800 p-6 text-white shadow-lg">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="max-w-2xl space-y-2">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-red-100">
+              AI blood report screening
+            </p>
+            <h2 className="text-2xl font-bold md:text-3xl">
+              Upload your blood report and get an instant eligibility check.
+            </h2>
+            <p className="text-sm leading-6 text-red-100/90 md:text-base">
+              The assistant reviews your report for common donation blockers,
+              then tells you whether you look eligible to donate now or need
+              medical follow-up first.
+            </p>
+          </div>
+          <BloodReportAnalysisDialog />
         </div>
       </div>
 

@@ -16,7 +16,7 @@ export const RecipientNavbar = () => {
 
           {/* Right Side - User Button */}
           <div className="flex items-center">
-            <UserButton />
+            <UserButton targetRole="recipient" />
           </div>
         </div>
       </div>

@@ -25,13 +25,22 @@ const schema = defineSchema({
     location: v.string(),
     locationPermissionGranted: v.boolean(),
     isEmergencyAlert: v.optional(v.boolean()),
+    bloodReportStatus: v.optional(
+      v.union(
+        v.literal("eligible"),
+        v.literal("not_eligible"),
+        v.literal("needs_review"),
+      ),
+    ),
+    bloodReportReviewedAt: v.optional(v.number()),
     latitude: v.optional(v.number()),
     longitude: v.optional(v.number()),
     profileCompleted: v.boolean(),
     profileImageUrl: v.optional(v.string()),
     createdAt: v.optional(v.number()),
   })
-    .index("by_user_role", ["role"])
+    .index("by_role", ["role"])
+    .index("by_user_role", ["userId", "role"])
     .index("by_user_id", ["userId"])
     .index("by_profile_completed", ["profileCompleted"]),
 });

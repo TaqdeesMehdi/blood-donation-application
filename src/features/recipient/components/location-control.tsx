@@ -36,7 +36,9 @@ export const LocationControl = () => {
 
   const updateLocation = useMutation(api.members.updateMemberLocation);
   const clearLocation = useMutation(api.members.clearMemberLocation);
-  const currentProfile = useQuery(api.members.getCurrentMemberProfile);
+  const currentProfile = useQuery(api.members.getCurrentMemberProfileByRole, {
+    role: "recipient",
+  });
 
   // Check if location is already enabled when component mounts
   useEffect(() => {
@@ -87,7 +89,7 @@ export const LocationControl = () => {
         });
 
         // Update location in database
-        updateLocation({ latitude, longitude })
+        updateLocation({ role: "recipient", latitude, longitude })
           .then(() => {
             toast.success("Location updated successfully");
           })
@@ -141,7 +143,7 @@ export const LocationControl = () => {
         accuracy: null,
         error: null,
       });
-      clearLocation()
+      clearLocation({ role: "recipient" })
         .then(() => {
           toast.info("Location sharing disabled");
         })

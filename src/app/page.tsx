@@ -1,5 +1,5 @@
 "use client";
-import { MemberProfileForm } from "@/features/members/components/member-profile-form";
+import { MemberProfileForm } from "../features/members/components/member-profile-form";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useRouter } from "next/navigation";
@@ -7,22 +7,27 @@ import { useEffect } from "react";
 
 export default function Home() {
   const router = useRouter();
-  const currentProfile = useQuery(api.members.getCurrentMemberProfile);
+  const donorProfile = useQuery(api.members.getCurrentMemberProfileByRole, {
+    role: "donor",
+  });
+  const recipientProfile = useQuery(api.members.getCurrentMemberProfileByRole, {
+    role: "recipient",
+  });
 
   // Redirect if profile is already completed
   useEffect(() => {
-    if (currentProfile && currentProfile.profileCompleted) {
-      // Redirect based on their role
-      if (currentProfile.role === "donor") {
-        router.replace("/donor");
-      } else {
-        router.replace("/recipient");
-      }
+    if (donorProfile?.profileCompleted) {
+      router.replace("/donor");
+      return;
     }
-  }, [currentProfile, router]);
+
+    if (recipientProfile?.profileCompleted) {
+      router.replace("/recipient");
+    }
+  }, [donorProfile, recipientProfile, router]);
 
   // Show loading state while checking profile
-  if (currentProfile === undefined) {
+  if (donorProfile === undefined || recipientProfile === undefined) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
@@ -33,7 +38,7 @@ export default function Home() {
   }
 
   // If profile is completed, show nothing (redirect will happen)
-  if (currentProfile && currentProfile.profileCompleted) {
+  if (donorProfile?.profileCompleted || recipientProfile?.profileCompleted) {
     return null;
   }
 

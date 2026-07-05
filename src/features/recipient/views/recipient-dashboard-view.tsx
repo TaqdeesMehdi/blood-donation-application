@@ -10,7 +10,9 @@ import { DonorProfileSection } from "../components/donor-profile-section";
 
 export const RecipientDashboardView = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const currentProfile = useQuery(api.members.getCurrentMemberProfile);
+  const currentProfile = useQuery(api.members.getCurrentMemberProfileByRole, {
+    role: "recipient",
+  });
   const setEmergencyAlert = useMutation(api.members.setEmergencyAlert);
   const isEmergencyActive = currentProfile?.isEmergencyAlert ?? false;
 
@@ -22,7 +24,10 @@ export const RecipientDashboardView = () => {
     try {
       setIsSubmitting(true);
       const nextState = !isEmergencyActive;
-      await setEmergencyAlert({ isEmergencyAlert: nextState });
+      await setEmergencyAlert({
+        role: "recipient",
+        isEmergencyAlert: nextState,
+      });
       toast.success(
         nextState ? "Emergency alert activated" : "Emergency alert deactivated",
       );

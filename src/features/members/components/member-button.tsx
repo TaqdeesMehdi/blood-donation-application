@@ -11,21 +11,30 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useCurrentMember } from "../api/use-current-member";
 import { RingLoader } from "react-spinners";
-import { LogOut, UserCircle, LayoutDashboard } from "lucide-react";
+import { LogOut, UserCircle, LayoutDashboard, RefreshCcw } from "lucide-react";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useCurrentUser } from "../api/use-current-user";
 import { useRouter } from "next/navigation";
 import { UserProfileDialog } from "./user-profile-dialog";
+import type { MemberRole } from "../types";
 
-export const UserButton = () => {
+interface UserButtonProps {
+  targetRole: MemberRole;
+}
+
+export const UserButton = ({ targetRole }: UserButtonProps) => {
   const { signOut } = useAuthActions();
   const router = useRouter();
-  const { data: member, isLoading: memberLoading } = useCurrentMember();
+  const { data: member, isLoading: memberLoading } =
+    useCurrentMember(targetRole);
+  const { data: fallbackMember, isLoading: fallbackLoading } = useCurrentMember(
+    targetRole === "donor" ? "recipient" : "donor",
+  );
   const { data: user, isLoading: userLoading } = useCurrentUser();
   const [profileOpen, setProfileOpen] = useState(false);
 
   // Loading state (must return)
-  if (memberLoading || userLoading) {
+  if (memberLoading || fallbackLoading || userLoading) {
     return (
       <div className="flex items-center justify-center p-2">
         <RingLoader size={20} color="#9CA3AF" />
@@ -34,14 +43,22 @@ export const UserButton = () => {
   }
 
   // Guard against null/undefined data
-  if (!member || !user) {
+  if (!user) {
     return null;
   }
 
+  const activeMember = member ?? fallbackMember;
   const displayName = user.name ?? user.email ?? "User";
   const imageUrl = user.image;
   const avatarFallback = displayName.charAt(0).toUpperCase();
-  const { role } = member;
+  const role = activeMember?.role ?? targetRole;
+  const dashboardHref =
+    targetRole === "donor" ? "/donor/dashboard" : "/recipient/dashboard";
+  const switchHref = targetRole === "donor" ? "/recipient" : "/donor";
+  const dashboardLabel =
+    targetRole === "donor" ? "Donor Dashboard" : "Recipient Dashboard";
+  const switchLabel =
+    targetRole === "donor" ? "Open Recipient Profile" : "Open Donor Profile";
 
   return (
     <>
@@ -59,21 +76,26 @@ export const UserButton = () => {
           <DropdownMenuItem
             onClick={() => setProfileOpen(true)}
             className="cursor-pointer"
+            disabled={!activeMember}
           >
             <UserCircle className="size-4 mr-2" />
             View Profile
           </DropdownMenuItem>
 
           <DropdownMenuItem
-            onClick={() =>
-              router.push(
-                role === "donor" ? "/donor/dashboard" : "/recipient/dashboard",
-              )
-            }
+            onClick={() => router.push(dashboardHref)}
             className="cursor-pointer"
           >
             <LayoutDashboard className="size-4 mr-2" />
-            {role === "donor" ? "Find Recipients" : "Find Donors"}
+            {dashboardLabel}
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
+            onClick={() => router.push(switchHref)}
+            className="cursor-pointer"
+          >
+            <RefreshCcw className="size-4 mr-2" />
+            {switchLabel}
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
@@ -97,10 +119,10 @@ export const UserButton = () => {
       </DropdownMenu>
 
       <UserProfileDialog
-        open={profileOpen}
+        open={profileOpen && !!activeMember}
         onOpenChange={setProfileOpen}
         user={user}
-        member={member}
+        member={activeMember!}
       />
     </>
   );

@@ -16,6 +16,7 @@ import {
   bloodTypes,
   genders,
   roles,
+  type MemberRole,
 } from "../types";
 
 import {
@@ -46,12 +47,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export const MemberProfileForm = () => {
+interface MemberProfileFormProps {
+  defaultRole?: MemberRole;
+}
+
+export const MemberProfileForm = ({ defaultRole }: MemberProfileFormProps) => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const createProfile = useMutation(api.members.createMemberProfile);
 
-  // Initialize form with react-hook-form and zod validation
   const form = useForm<MemberProfileFormInput>({
     resolver: zodResolver(memberProfileFormSchema),
     defaultValues: {
@@ -59,55 +63,48 @@ export const MemberProfileForm = () => {
       weight: "",
       bloodType: "",
       gender: "",
-      role: "",
+      role: defaultRole ?? "",
       location: "Multan, Punjab, Pakistan",
       locationPermissionGranted: false,
       phone: "",
     },
   });
-  const selectedRole = form.watch("role");
 
-  // Form submission handler
+  const selectedRole = defaultRole ?? form.watch("role");
+
   const onSubmit = async (formData: MemberProfileFormInput) => {
     try {
       setIsSubmitting(true);
 
-      // Convert form data to the correct types
+      const resolvedRole = (defaultRole ?? formData.role) as MemberRole;
       const data: MemberProfileFormData = {
         age: parseInt(formData.age, 10),
         weight: Number.parseFloat(formData.weight),
         bloodType: formData.bloodType as (typeof bloodTypes)[number],
         gender: formData.gender as (typeof genders)[number],
-        role: formData.role as (typeof roles)[number],
+        role: resolvedRole,
         location: formData.location,
         locationPermissionGranted: formData.locationPermissionGranted,
         phone: formData.phone,
       };
 
-      // Call Convex mutation to create profile
       await createProfile({
+        role: data.role,
         age: data.age,
         weight: data.weight,
         bloodType: data.bloodType,
         gender: data.gender,
-        role: data.role,
         location: data.location,
         locationPermissionGranted: data.locationPermissionGranted,
         phone: data.phone,
         bio: "",
       });
 
-      // Show success message
       toast.success("Profile completed successfully!", {
         description: `Redirecting to ${data.role} dashboard...`,
       });
 
-      // Redirect based on role using replace to prevent back navigation
-      if (data.role === "donor") {
-        router.replace("/donor");
-      } else {
-        router.replace("/recipient");
-      }
+      router.replace(data.role === "donor" ? "/donor" : "/recipient");
     } catch (error) {
       console.error("Error creating profile:", error);
       toast.error("Failed to create profile", {
@@ -132,7 +129,6 @@ export const MemberProfileForm = () => {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {/* Phone Field */}
             <FormField
               control={form.control}
               name="phone"
@@ -157,7 +153,6 @@ export const MemberProfileForm = () => {
               )}
             />
 
-            {/* Blood Type Field */}
             <FormField
               control={form.control}
               name="bloodType"
@@ -192,7 +187,6 @@ export const MemberProfileForm = () => {
               )}
             />
 
-            {/* Gender Field */}
             <FormField
               control={form.control}
               name="gender"
@@ -228,52 +222,56 @@ export const MemberProfileForm = () => {
               )}
             />
 
-            {/* Role Field */}
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem className="space-y-3">
-                  <FormLabel className="text-base font-semibold">
-                    I want to register as:{" "}
-                    <span className="text-destructive">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="flex flex-col space-y-2"
-                      disabled={isSubmitting}
-                    >
-                      {roles.map((role) => (
-                        <FormItem
-                          key={role}
-                          className="flex items-center space-x-3 space-y-0 rounded-lg border p-4 hover:bg-accent transition-colors"
-                        >
-                          <FormControl>
-                            <RadioGroupItem value={role} />
-                          </FormControl>
-                          <FormLabel className="font-normal capitalize cursor-pointer flex-1">
-                            {role}
-                            <span className="block text-sm text-muted-foreground">
-                              {role === "donor"
-                                ? "I want to donate blood to help others"
-                                : "I am looking for blood donors"}
-                            </span>
-                          </FormLabel>
-                        </FormItem>
-                      ))}
-                    </RadioGroup>
-                  </FormControl>
-                  <FormDescription>
-                    This will determine your dashboard and features
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {defaultRole ? (
+              <div className="rounded-lg border border-red-100 bg-red-50 p-4 text-sm text-red-700">
+                Creating a {defaultRole} profile for this account.
+              </div>
+            ) : (
+              <FormField
+                control={form.control}
+                name="role"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel className="text-base font-semibold">
+                      I want to register as:{" "}
+                      <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex flex-col space-y-2"
+                        disabled={isSubmitting}
+                      >
+                        {roles.map((role) => (
+                          <FormItem
+                            key={role}
+                            className="flex items-center space-x-3 space-y-0 rounded-lg border p-4 hover:bg-accent transition-colors"
+                          >
+                            <FormControl>
+                              <RadioGroupItem value={role} />
+                            </FormControl>
+                            <FormLabel className="font-normal capitalize cursor-pointer flex-1">
+                              {role}
+                              <span className="block text-sm text-muted-foreground">
+                                {role === "donor"
+                                  ? "I want to donate blood to help others"
+                                  : "I am looking for blood donors"}
+                              </span>
+                            </FormLabel>
+                          </FormItem>
+                        ))}
+                      </RadioGroup>
+                    </FormControl>
+                    <FormDescription>
+                      This will determine your dashboard and features
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
-            {/* Age Field */}
             <FormField
               control={form.control}
               name="age"
@@ -303,7 +301,6 @@ export const MemberProfileForm = () => {
               )}
             />
 
-            {/* Weight Field */}
             <FormField
               control={form.control}
               name="weight"
@@ -330,7 +327,6 @@ export const MemberProfileForm = () => {
               )}
             />
 
-            {/* Location Field */}
             <FormField
               control={form.control}
               name="location"
@@ -355,7 +351,6 @@ export const MemberProfileForm = () => {
               )}
             />
 
-            {/* Location Permission Field */}
             <FormField
               control={form.control}
               name="locationPermissionGranted"
@@ -384,7 +379,6 @@ export const MemberProfileForm = () => {
               )}
             />
 
-            {/* Submit Button */}
             <Button
               type="submit"
               className="w-full"

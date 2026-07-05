@@ -2,24 +2,13 @@
 
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { MemberProfileForm } from "../../../features/members/components/member-profile-form";
 import { DonorDashboardView } from "@/features/donor/views/donor-dashboard-view";
 
 const DonorDashboardPage = () => {
-  const router = useRouter();
-  const currentProfile = useQuery(api.members.getCurrentMemberProfile);
-
-  // Redirect if not a donor or profile not completed
-  useEffect(() => {
-    if (currentProfile === null) {
-      // No profile, redirect to profile form
-      router.replace("/");
-    } else if (currentProfile && currentProfile.role !== "donor") {
-      // Wrong role, redirect to their correct dashboard
-      router.replace("/recipient");
-    }
-  }, [currentProfile, router]);
+  const currentProfile = useQuery(api.members.getCurrentMemberProfileByRole, {
+    role: "donor",
+  });
 
   // Show loading state
   if (currentProfile === undefined) {
@@ -32,9 +21,12 @@ const DonorDashboardPage = () => {
     );
   }
 
-  // If no profile or wrong role, show nothing (redirect will happen)
-  if (!currentProfile || currentProfile.role !== "donor") {
-    return null;
+  if (!currentProfile) {
+    return (
+      <div className="container mx-auto p-6">
+        <MemberProfileForm defaultRole="donor" />
+      </div>
+    );
   }
 
   return (

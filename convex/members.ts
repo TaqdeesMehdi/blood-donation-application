@@ -1,6 +1,21 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
+import type { QueryCtx } from "./_generated/server";
+import type { Id } from "./_generated/dataModel";
+
+const memberRoleValidator = v.union(v.literal("donor"), v.literal("recipient"));
+
+async function getMemberForUserAndRole(
+  ctx: { db: QueryCtx["db"] },
+  userId: Id<"users">,
+  role: "donor" | "recipient",
+) {
+  return await ctx.db
+    .query("members")
+    .withIndex("by_user_role", (q) => q.eq("userId", userId).eq("role", role))
+    .first();
+}
 
 /**
  * Create a new member profile
@@ -21,7 +36,7 @@ export const createMemberProfile = mutation({
       v.literal("O-"),
     ),
     gender: v.union(v.literal("male"), v.literal("female"), v.literal("other")),
-    role: v.union(v.literal("donor"), v.literal("recipient")),
+    role: memberRoleValidator,
     location: v.string(),
     locationPermissionGranted: v.boolean(),
     phone: v.string(),
@@ -34,14 +49,15 @@ export const createMemberProfile = mutation({
       throw new Error("User must be authenticated to create a profile");
     }
 
-    // Check if profile already exists for this user
-    const existingProfile = await ctx.db
-      .query("members")
-      .withIndex("by_user_id", (q) => q.eq("userId", userId))
-      .first();
+    // Check if this user already has a profile for the selected role
+    const existingProfile = await getMemberForUserAndRole(
+      ctx,
+      userId,
+      args.role,
+    );
 
     if (existingProfile) {
-      throw new Error("Profile already exists for this user");
+      throw new Error(`A ${args.role} profile already exists for this account`);
     }
 
     // Create the member profile
@@ -71,21 +87,42 @@ export const createMemberProfile = mutation({
  * Get the current authenticated user's member profile
  */
 export const getCurrentMemberProfile = query({
-  args: {},
-  handler: async (ctx) => {
+  args: {
+    role: v.optional(memberRoleValidator),
+  },
+  handler: async (ctx, args) => {
     // Get authenticated user
     const userId = await getAuthUserId(ctx);
     if (!userId) {
       return null;
     }
 
-    // Query member profile by userId
-    const member = await ctx.db
-      .query("members")
-      .withIndex("by_user_id", (q) => q.eq("userId", userId))
-      .first();
+    const member = args.role
+      ? await getMemberForUserAndRole(ctx, userId, args.role)
+      : await ctx.db
+          .query("members")
+          .withIndex("by_user_id", (q) => q.eq("userId", userId))
+          .first();
 
     return member;
+  },
+});
+
+/**
+ * Get the current authenticated user's member profile for a specific role.
+ * Prefer this when the caller knows whether it is rendering donor or recipient UI.
+ */
+export const getCurrentMemberProfileByRole = query({
+  args: {
+    role: memberRoleValidator,
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
+      return null;
+    }
+
+    return await getMemberForUserAndRole(ctx, userId, args.role);
   },
 });
 
@@ -94,19 +131,22 @@ export const getCurrentMemberProfile = query({
  * Returns boolean indicating profile completion status
  */
 export const checkProfileCompletion = query({
-  args: {},
-  handler: async (ctx) => {
+  args: {
+    role: v.optional(memberRoleValidator),
+  },
+  handler: async (ctx, args) => {
     // Get authenticated user
     const userId = await getAuthUserId(ctx);
     if (!userId) {
       return false;
     }
 
-    // Query member profile
-    const member = await ctx.db
-      .query("members")
-      .withIndex("by_user_id", (q) => q.eq("userId", userId))
-      .first();
+    const member = args.role
+      ? await getMemberForUserAndRole(ctx, userId, args.role)
+      : await ctx.db
+          .query("members")
+          .withIndex("by_user_id", (q) => q.eq("userId", userId))
+          .first();
 
     // Return profile completion status
     return member?.profileCompleted ?? false;
@@ -123,7 +163,7 @@ export const getAllRecipients = query({
     // Query all members with recipient role
     const recipients = await ctx.db
       .query("members")
-      .withIndex("by_user_role", (q) => q.eq("role", "recipient"))
+      .withIndex("by_role", (q) => q.eq("role", "recipient"))
       .collect();
 
     // Get user information for each recipient
@@ -152,7 +192,7 @@ export const getAllDonors = query({
   handler: async (ctx) => {
     const donors = await ctx.db
       .query("members")
-      .withIndex("by_user_role", (q) => q.eq("role", "donor"))
+      .withIndex("by_role", (q) => q.eq("role", "donor"))
       .collect();
 
     const donorsWithUserInfo = await Promise.all(
@@ -176,6 +216,7 @@ export const getAllDonors = query({
  */
 export const updateMemberProfile = mutation({
   args: {
+    role: memberRoleValidator,
     phone: v.string(),
     bloodType: v.union(
       v.literal("A+"),
@@ -197,10 +238,7 @@ export const updateMemberProfile = mutation({
       throw new Error("User must be authenticated");
     }
 
-    const member = await ctx.db
-      .query("members")
-      .withIndex("by_user_id", (q) => q.eq("userId", userId))
-      .first();
+    const member = await getMemberForUserAndRole(ctx, userId, args.role);
 
     if (!member) {
       throw new Error("Member profile not found");
@@ -219,10 +257,49 @@ export const updateMemberProfile = mutation({
 });
 
 /**
+ * Store the latest blood report screening result on the current donor profile
+ */
+export const updateBloodReportStatus = mutation({
+  args: {
+    role: v.literal("donor"),
+    bloodReportStatus: v.union(
+      v.literal("eligible"),
+      v.literal("not_eligible"),
+      v.literal("needs_review"),
+    ),
+    bloodReportReviewedAt: v.number(),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
+      throw new Error("User must be authenticated");
+    }
+
+    const member = await getMemberForUserAndRole(ctx, userId, args.role);
+
+    if (!member) {
+      throw new Error("Member profile not found");
+    }
+
+    if (member.role !== "donor") {
+      throw new Error("Only donors can update blood report status");
+    }
+
+    await ctx.db.patch(member._id, {
+      bloodReportStatus: args.bloodReportStatus,
+      bloodReportReviewedAt: args.bloodReportReviewedAt,
+    });
+
+    return { success: true };
+  },
+});
+
+/**
  * Update the emergency alert status for the current recipient
  */
 export const setEmergencyAlert = mutation({
   args: {
+    role: v.literal("recipient"),
     isEmergencyAlert: v.boolean(),
   },
   handler: async (ctx, args) => {
@@ -231,10 +308,7 @@ export const setEmergencyAlert = mutation({
       throw new Error("User must be authenticated");
     }
 
-    const member = await ctx.db
-      .query("members")
-      .withIndex("by_user_id", (q) => q.eq("userId", userId))
-      .first();
+    const member = await getMemberForUserAndRole(ctx, userId, args.role);
 
     if (!member) {
       throw new Error("Member profile not found");
@@ -257,6 +331,7 @@ export const setEmergencyAlert = mutation({
  */
 export const updateProfileImage = mutation({
   args: {
+    role: memberRoleValidator,
     profileImageUrl: v.string(),
   },
   handler: async (ctx, args) => {
@@ -265,10 +340,7 @@ export const updateProfileImage = mutation({
       throw new Error("User must be authenticated");
     }
 
-    const member = await ctx.db
-      .query("members")
-      .withIndex("by_user_id", (q) => q.eq("userId", userId))
-      .first();
+    const member = await getMemberForUserAndRole(ctx, userId, args.role);
 
     if (!member) {
       throw new Error("Member profile not found");
@@ -286,17 +358,16 @@ export const updateProfileImage = mutation({
  * Clear the geolocation coordinates of the current user's member profile
  */
 export const clearMemberLocation = mutation({
-  args: {},
-  handler: async (ctx) => {
+  args: {
+    role: v.literal("recipient"),
+  },
+  handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) {
       throw new Error("User must be authenticated");
     }
 
-    const member = await ctx.db
-      .query("members")
-      .withIndex("by_user_id", (q) => q.eq("userId", userId))
-      .first();
+    const member = await getMemberForUserAndRole(ctx, userId, args.role);
 
     if (!member) {
       throw new Error("Member profile not found");
@@ -317,6 +388,7 @@ export const clearMemberLocation = mutation({
  */
 export const updateMemberLocation = mutation({
   args: {
+    role: v.literal("recipient"),
     latitude: v.number(),
     longitude: v.number(),
   },
@@ -326,10 +398,7 @@ export const updateMemberLocation = mutation({
       throw new Error("User must be authenticated to update location");
     }
 
-    const member = await ctx.db
-      .query("members")
-      .withIndex("by_user_id", (q) => q.eq("userId", userId))
-      .first();
+    const member = await getMemberForUserAndRole(ctx, userId, args.role);
 
     if (!member) {
       throw new Error("Member profile not found");

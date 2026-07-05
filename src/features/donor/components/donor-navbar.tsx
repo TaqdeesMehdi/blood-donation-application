@@ -19,7 +19,7 @@ export const DonorNavbar = () => {
 
           {/* Right Side - User Button */}
           <div className="flex items-center">
-            <UserButton />
+            <UserButton targetRole="donor" />
           </div>
         </div>
       </div>
